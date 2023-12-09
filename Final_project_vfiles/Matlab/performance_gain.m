@@ -3,7 +3,7 @@ close all
 clc
 
 % Change the packet number (1-6)
-packet_no = 1;
+packet_no = 3;
 
 switch packet_no
     case 1

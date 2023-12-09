@@ -16,6 +16,7 @@
 
 // Add your RTL & SRAM files
 QR_Engine.v
+Divide.v
 
 // tb
 testfixture.v

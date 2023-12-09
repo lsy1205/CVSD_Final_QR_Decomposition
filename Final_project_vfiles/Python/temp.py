@@ -1,11 +1,9 @@
-import math
+import numpy as np
 import sys
-
-from pyrsistent import discard
+import math
 
 iter = 19
-dicard = 12
-reserve = 24
+reserve = 23
 def int_to_bin(number):
     if number < 0:
         temp = '0' + bin(number + 1)[3:]
@@ -64,16 +62,15 @@ def sqrt_approximate(number, iteration = iter):
 
 
 R_2d_array = [['' for _ in range(4)] for _ in range(4)]
-tempR_2d_array = [['' for _ in range(4)] for _ in range(4)]
 Q_2d_array = [['' for _ in range(4)] for _ in range(4)]
 H_2d_array = [['' for _ in range(4)] for _ in range(4)]
 y_array = ['' for _ in range(4)]
 y_hat_array = ['' for _ in range(4)]
 
-with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
-    with open('..\Matlab\Result\out_R_SNR10_P1_result.txt', 'w') as file_1:
+with open('..\Matlab\Result\out_y_hat_SNR10_P3_result.txt', 'w') as file_2:
+    with open('..\Matlab\Result\out_R_SNR10_P3_result.txt', 'w') as file_1:
         # Open the file in read mode ('r')
-        with open('../01_RTL/PATTERN/packet_1/input_H_and_y.dat', 'r') as file:
+        with open('../01_RTL/PATTERN/packet_3/input_H_and_y.dat', 'r') as file:
             # Read file line by line
             i = 0
             temp = 0
@@ -118,26 +115,35 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     temp = a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8
                     # R_2d_array[0][0] = R_format(sqrt_approximate(bin(temp)[2:].zfill(50)),0,20)
                     R_2d_array[0][0] = Q_format(int_to_bin(int(math.sqrt(temp) / 2**(reserve - 18))),20)
-                    tempR_2d_array[0][0] = Q_format(int_to_bin(int(math.sqrt(temp))),reserve)
+                    
+                    print("H: ", binary_abs(H_2d_array[0][0][:reserve])/2**(reserve-2))
+                    print("H: ", binary_abs(H_2d_array[1][0][:reserve])/2**(reserve-2))
+                    print("H: ", binary_abs(H_2d_array[2][0][:reserve])/2**(reserve-2))
+                    print("H: ", binary_abs(H_2d_array[3][0][:reserve])/2**(reserve-2))
+                    print("H: ", binary_abs(H_2d_array[0][0][reserve:2*reserve])/2**(reserve-2))
+                    print("H: ", binary_abs(H_2d_array[1][0][reserve:2*reserve])/2**(reserve-2))
+                    print("H: ", binary_abs(H_2d_array[2][0][reserve:2*reserve])/2**(reserve-2))
+                    print("H: ", binary_abs(H_2d_array[3][0][reserve:2*reserve])/2**(reserve-2))
                     print("R11:", binary_abs(R_2d_array[0][0]) / 2**16)
 
+
                     #calculate normalized orthogonal vector
-                    #Q format is S17.6  S11
-                    temp = round(binary_abs(H_2d_array[0][0][0:reserve]) / int(tempR_2d_array[0][0],2))
+                    #Q format is S17.6
+                    temp = round(binary_abs(H_2d_array[0][0][0:reserve]) / int(R_2d_array[0][0],2))
                     Q_2d_array[0][0] = Q_format(int_to_bin(temp), reserve)
-                    temp = round(binary_abs(H_2d_array[0][0][reserve:2*reserve]) / int(tempR_2d_array[0][0],2))
+                    temp = round(binary_abs(H_2d_array[0][0][reserve:2*reserve]) / int(R_2d_array[0][0],2))
                     Q_2d_array[0][0] += Q_format(int_to_bin(temp), reserve)
-                    temp = round(binary_abs(H_2d_array[1][0][0:reserve]) / int(tempR_2d_array[0][0],2))
+                    temp = round(binary_abs(H_2d_array[1][0][0:reserve]) / int(R_2d_array[0][0],2))
                     Q_2d_array[1][0] = Q_format(int_to_bin(temp), reserve)
-                    temp = round(binary_abs(H_2d_array[1][0][reserve:2*reserve]) / int(tempR_2d_array[0][0],2))
+                    temp = round(binary_abs(H_2d_array[1][0][reserve:2*reserve]) / int(R_2d_array[0][0],2))
                     Q_2d_array[1][0] += Q_format(int_to_bin(temp), reserve)
-                    temp = round(binary_abs(H_2d_array[2][0][0:reserve]) / int(tempR_2d_array[0][0],2))
+                    temp = round(binary_abs(H_2d_array[2][0][0:reserve]) / int(R_2d_array[0][0],2))
                     Q_2d_array[2][0] = Q_format(int_to_bin(temp), reserve)
-                    temp = round(binary_abs(H_2d_array[2][0][reserve:2*reserve]) / int(tempR_2d_array[0][0],2))
+                    temp = round(binary_abs(H_2d_array[2][0][reserve:2*reserve]) / int(R_2d_array[0][0],2))
                     Q_2d_array[2][0] += Q_format(int_to_bin(temp), reserve)
-                    temp = round(binary_abs(H_2d_array[3][0][0:reserve]) / int(tempR_2d_array[0][0],2))
+                    temp = round(binary_abs(H_2d_array[3][0][0:reserve]) / int(R_2d_array[0][0],2))
                     Q_2d_array[3][0] = Q_format(int_to_bin(temp), reserve)
-                    temp = round(binary_abs(H_2d_array[3][0][reserve:2*reserve]) / int(tempR_2d_array[0][0],2))
+                    temp = round(binary_abs(H_2d_array[3][0][reserve:2*reserve]) / int(R_2d_array[0][0],2))
                     Q_2d_array[3][0] += Q_format(int_to_bin(temp), reserve)
 
                     #calculate inner products
@@ -149,9 +155,7 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     b_6 = -binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(H_2d_array[2][1][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(H_2d_array[2][1][0:reserve])
                     b_7 = binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(H_2d_array[3][1][0:reserve]) + binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(H_2d_array[3][1][reserve:2*reserve])
                     b_8 = -binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(H_2d_array[3][1][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(H_2d_array[3][1][0:reserve])
-                    # R_2d_array[0][1] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-12], 20)
-                    # R_2d_array[0][1] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-12], 20)
-                    R_2d_array[0][1] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-10], 20)
+                    R_2d_array[0][1] = Q_format(int_to_bin((b_2 + b_4 + b_6 + b_8))[:-10], 20)
                     R_2d_array[0][1] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-10], 20)
                     b_1 = binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(H_2d_array[0][2][0:reserve]) + binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(H_2d_array[0][2][reserve:2*reserve])
                     b_2 = -binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(H_2d_array[0][2][reserve:2*reserve]) + binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(H_2d_array[0][2][0:reserve])
@@ -161,10 +165,8 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     b_6 = -binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(H_2d_array[2][2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(H_2d_array[2][2][0:reserve])
                     b_7 = binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(H_2d_array[3][2][0:reserve]) + binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(H_2d_array[3][2][reserve:2*reserve])
                     b_8 = -binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(H_2d_array[3][2][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(H_2d_array[3][2][0:reserve])
-                    # R_2d_array[0][2] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-12], 20)
-                    # R_2d_array[0][2] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-12], 20)
-                    R_2d_array[0][2] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8) + '0' * 6, 20)
-                    R_2d_array[0][2] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7) + '0' * 6, 20)
+                    R_2d_array[0][2] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-10], 20)
+                    R_2d_array[0][2] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-10], 20)
                     b_1 = binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(H_2d_array[0][3][0:reserve]) + binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(H_2d_array[0][3][reserve:2*reserve])
                     b_2 = -binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(H_2d_array[0][3][reserve:2*reserve]) + binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(H_2d_array[0][3][0:reserve])
                     b_3 = binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(H_2d_array[1][3][0:reserve]) + binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(H_2d_array[1][3][reserve:2*reserve])
@@ -173,61 +175,48 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     b_6 = -binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(H_2d_array[2][3][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(H_2d_array[2][3][0:reserve])
                     b_7 = binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(H_2d_array[3][3][0:reserve]) + binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(H_2d_array[3][3][reserve:2*reserve])
                     b_8 = -binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(H_2d_array[3][3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(H_2d_array[3][3][0:reserve])
-                    # R_2d_array[0][3] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-12], 20)
-                    # R_2d_array[0][3] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-12], 20)
-                    R_2d_array[0][3] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8) + '0' * 6, 20)
-                    R_2d_array[0][3] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7) + '0' * 6, 20)
-                    hex_string_1 = "fb7d2"
-                    binary = bin(int(hex_string_1, 16))[2:].zfill(20)
-                    print("im_R12:",binary_abs(binary) / 2**16)
-                    binary = R_2d_array[0][1][0:20]
-                    print("im_R12:",binary_abs(binary) / 2**16)
-
-                    hex_string_1 = "faf1f"
-                    binary = bin(int(hex_string_1, 16))[2:].zfill(20)
-                    print("re_R12:",binary_abs(binary) / 2**16)
-                    binary = R_2d_array[0][1][0:20]
-                    print("im_R12:",binary_abs(binary) / 2**16)
+                    R_2d_array[0][3] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-10], 20)
+                    R_2d_array[0][3] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-10], 20)
                     
                     #calculate orthogonal vector h2 h3 h4
-                    c_1 = binary_abs(H_2d_array[0][1][reserve:2*reserve]) + binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][1][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][20:40])  / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[0][1][0:reserve]) - binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][1][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][0:20]) / 2**(18 - reserve)
-                    H_2d_array[0][1] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[1][1][reserve:2*reserve]) + binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][1][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[1][1][0:reserve]) - binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][1][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][0:20]) / 2**(18 - reserve)
-                    H_2d_array[1][1] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[2][1][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][1][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[2][1][0:reserve]) - binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][1][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][0:20]) / 2**(18 - reserve)
-                    H_2d_array[2][1] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[3][1][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][1][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[3][1][0:reserve]) - binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][1][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][0:20]) / 2**(18 - reserve)
-                    H_2d_array[3][1] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
+                    c_1 = binary_abs(H_2d_array[0][1][reserve:2*reserve]) + binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][1][0:20]) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][20:40])
+                    c_2 = binary_abs(H_2d_array[0][1][0:reserve]) - binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][1][20:40]) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][0:20])
+                    H_2d_array[0][1] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[1][1][reserve:2*reserve]) + binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][1][0:20]) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][20:40])
+                    c_2 = binary_abs(H_2d_array[1][1][0:reserve]) - binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][1][20:40]) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][0:20])
+                    H_2d_array[1][1] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[2][1][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][1][0:20]) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][20:40])
+                    c_2 = binary_abs(H_2d_array[2][1][0:reserve]) - binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][1][20:40]) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][0:20])
+                    H_2d_array[2][1] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[3][1][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][1][0:20]) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][20:40])
+                    c_2 = binary_abs(H_2d_array[3][1][0:reserve]) - binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][1][20:40]) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][1][0:20])
+                    H_2d_array[3][1] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
 
-                    c_1 = binary_abs(H_2d_array[0][2][reserve:2*reserve]) + binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][2][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[0][2][0:reserve]) - binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][2][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][0:20]) / 2**(18 - reserve)
-                    H_2d_array[0][2] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[1][2][reserve:2*reserve]) + binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][2][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[1][2][0:reserve]) - binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][2][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][0:20]) / 2**(18 - reserve)
-                    H_2d_array[1][2] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[2][2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][2][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[2][2][0:reserve]) - binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][2][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][0:20]) / 2**(18 - reserve)
-                    H_2d_array[2][2] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[3][2][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][2][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[3][2][0:reserve]) - binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][2][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][0:20]) / 2**(18 - reserve)
-                    H_2d_array[3][2] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
+                    c_1 = binary_abs(H_2d_array[0][2][reserve:2*reserve]) + binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][2][0:20]) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][20:40])
+                    c_2 = binary_abs(H_2d_array[0][2][0:reserve]) - binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][2][20:40]) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][0:20])
+                    H_2d_array[0][2] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[1][2][reserve:2*reserve]) + binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][2][0:20]) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][20:40])
+                    c_2 = binary_abs(H_2d_array[1][2][0:reserve]) - binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][2][20:40]) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][0:20])
+                    H_2d_array[1][2] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[2][2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][2][0:20]) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][20:40])
+                    c_2 = binary_abs(H_2d_array[2][2][0:reserve]) - binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][2][20:40]) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][0:20])
+                    H_2d_array[2][2] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[3][2][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][2][0:20]) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][20:40])
+                    c_2 = binary_abs(H_2d_array[3][2][0:reserve]) - binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][2][20:40]) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][2][0:20])
+                    H_2d_array[3][2] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
 
-                    c_1 = binary_abs(H_2d_array[0][3][reserve:2*reserve]) + binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][3][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[0][3][0:reserve]) - binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][3][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][0:20]) / 2**(18 - reserve)
-                    H_2d_array[0][3] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[1][3][reserve:2*reserve]) + binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][3][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[1][3][0:reserve]) - binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][3][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][0:20]) / 2**(18 - reserve)
-                    H_2d_array[1][3] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[2][3][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][3][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[2][3][0:reserve]) - binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][3][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][0:20]) / 2**(18 - reserve)
-                    H_2d_array[2][3] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
-                    c_1 = binary_abs(H_2d_array[3][3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][3][0:20]) / 2**(18 - reserve) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][20:40]) / 2**(18 - reserve)
-                    c_2 = binary_abs(H_2d_array[3][3][0:reserve]) - binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][3][20:40]) / 2**(18 - reserve) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][0:20]) / 2**(18 - reserve)
-                    H_2d_array[3][3] = Q_format(int_to_bin(int(c_2)), reserve) + Q_format(int_to_bin(int(c_1)), reserve)
+                    c_1 = binary_abs(H_2d_array[0][3][reserve:2*reserve]) + binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][3][0:20]) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][20:40])
+                    c_2 = binary_abs(H_2d_array[0][3][0:reserve]) - binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(R_2d_array[0][3][20:40]) - binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][0:20])
+                    H_2d_array[0][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[1][3][reserve:2*reserve]) + binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][3][0:20]) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][20:40])
+                    c_2 = binary_abs(H_2d_array[1][3][0:reserve]) - binary_abs(Q_2d_array[1][0][0:reserve]) * binary_abs(R_2d_array[0][3][20:40]) - binary_abs(Q_2d_array[1][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][0:20])
+                    H_2d_array[1][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[2][3][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][3][0:20]) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][20:40])
+                    c_2 = binary_abs(H_2d_array[2][3][0:reserve]) - binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(R_2d_array[0][3][20:40]) - binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][0:20])
+                    H_2d_array[2][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
+                    c_1 = binary_abs(H_2d_array[3][3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][3][0:20]) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][20:40])
+                    c_2 = binary_abs(H_2d_array[3][3][0:reserve]) - binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(R_2d_array[0][3][20:40]) - binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(R_2d_array[0][3][0:20])
+                    H_2d_array[3][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
 
                     #iteration 2
                     a_1 = binary_abs(H_2d_array[0][1][0:reserve]) ** 2
@@ -242,28 +231,24 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     # R_2d_array[1][1] = R_format(sqrt_approximate(bin(temp)[2:].zfill(50)),0,20)
                     R_2d_array[1][1] = Q_format(int_to_bin(int(math.sqrt(temp) / 2**(reserve - 18))),20)
                     print("R22:", binary_abs(R_2d_array[1][1]) / 2**16)
-                    hex_string_1 = "0c96c"
-                    binary = bin(int(hex_string_1, 16))[2:].zfill(20)
-                    print("re_R22:",binary_abs(binary) / 2**16)
-                    
 
                     #calculate normalized orthogonal vector
                     temp = round(binary_abs(H_2d_array[0][1][0:reserve]) / int(R_2d_array[1][1],2))
-                    Q_2d_array[0][1] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[0][1] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[0][1][reserve:2*reserve]) / int(R_2d_array[1][1],2))
-                    Q_2d_array[0][1] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[0][1] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[1][1][0:reserve]) / int(R_2d_array[1][1],2))
-                    Q_2d_array[1][1] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[1][1] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[1][1][reserve:2*reserve]) / int(R_2d_array[1][1],2))
-                    Q_2d_array[1][1] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[1][1] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[2][1][0:reserve]) / int(R_2d_array[1][1],2))
-                    Q_2d_array[2][1] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[2][1] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[2][1][reserve:2*reserve]) / int(R_2d_array[1][1],2))
-                    Q_2d_array[2][1] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[2][1] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[3][1][0:reserve]) / int(R_2d_array[1][1],2))
-                    Q_2d_array[3][1] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[3][1] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[3][1][reserve:2*reserve]) / int(R_2d_array[1][1],2))
-                    Q_2d_array[3][1] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[3][1] += Q_format(int_to_bin(temp), reserve)
 
                     #calculate inner products
                     b_1 = binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(H_2d_array[0][2][0:reserve]) + binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(H_2d_array[0][2][reserve:2*reserve])
@@ -274,8 +259,8 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     b_6 = -binary_abs(Q_2d_array[2][1][0:reserve]) * binary_abs(H_2d_array[2][2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][1][reserve:2*reserve]) * binary_abs(H_2d_array[2][2][0:reserve])
                     b_7 = binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(H_2d_array[3][2][0:reserve]) + binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(H_2d_array[3][2][reserve:2*reserve])
                     b_8 = -binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(H_2d_array[3][2][reserve:2*reserve]) + binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(H_2d_array[3][2][0:reserve])
-                    R_2d_array[1][2] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-12], 20)
-                    R_2d_array[1][2] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-12], 20)
+                    R_2d_array[1][2] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-10], 20)
+                    R_2d_array[1][2] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-10], 20)
                     b_1 = binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(H_2d_array[0][3][0:reserve]) + binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(H_2d_array[0][3][reserve:2*reserve])
                     b_2 = -binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(H_2d_array[0][3][reserve:2*reserve]) + binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(H_2d_array[0][3][0:reserve])
                     b_3 = binary_abs(Q_2d_array[1][1][0:reserve]) * binary_abs(H_2d_array[1][3][0:reserve]) + binary_abs(Q_2d_array[1][1][reserve:2*reserve]) * binary_abs(H_2d_array[1][3][reserve:2*reserve])
@@ -284,35 +269,35 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     b_6 = -binary_abs(Q_2d_array[2][1][0:reserve]) * binary_abs(H_2d_array[2][3][reserve:2*reserve]) + binary_abs(Q_2d_array[2][1][reserve:2*reserve]) * binary_abs(H_2d_array[2][3][0:reserve])
                     b_7 = binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(H_2d_array[3][3][0:reserve]) + binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(H_2d_array[3][3][reserve:2*reserve])
                     b_8 = -binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(H_2d_array[3][3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(H_2d_array[3][3][0:reserve])
-                    R_2d_array[1][3] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-12], 20)
-                    R_2d_array[1][3] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-12], 20)
+                    R_2d_array[1][3] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-10], 20)
+                    R_2d_array[1][3] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-10], 20)
                     
                     #calculate orthogonal vector h3 h4
                     c_1 = binary_abs(H_2d_array[0][2][reserve:2*reserve]) + binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(R_2d_array[1][2][0:20]) - binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][2][20:40])
                     c_2 = binary_abs(H_2d_array[0][2][0:reserve]) - binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(R_2d_array[1][2][20:40]) - binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][2][0:20])
-                    H_2d_array[0][2] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[0][2] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[1][2][reserve:2*reserve]) + binary_abs(Q_2d_array[1][1][0:reserve]) * binary_abs(R_2d_array[1][2][0:20]) - binary_abs(Q_2d_array[1][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][2][20:40])
                     c_2 = binary_abs(H_2d_array[1][2][0:reserve]) - binary_abs(Q_2d_array[1][1][0:reserve]) * binary_abs(R_2d_array[1][2][20:40]) - binary_abs(Q_2d_array[1][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][2][0:20])
-                    H_2d_array[1][2] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[1][2] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[2][2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][1][0:reserve]) * binary_abs(R_2d_array[1][2][0:20]) - binary_abs(Q_2d_array[2][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][2][20:40])
                     c_2 = binary_abs(H_2d_array[2][2][0:reserve]) - binary_abs(Q_2d_array[2][1][0:reserve]) * binary_abs(R_2d_array[1][2][20:40]) - binary_abs(Q_2d_array[2][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][2][0:20])
-                    H_2d_array[2][2] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[2][2] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[3][2][reserve:2*reserve]) + binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(R_2d_array[1][2][0:20]) - binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][2][20:40])
                     c_2 = binary_abs(H_2d_array[3][2][0:reserve]) - binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(R_2d_array[1][2][20:40]) - binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][2][0:20])
-                    H_2d_array[3][2] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[3][2] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
 
                     c_1 = binary_abs(H_2d_array[0][3][reserve:2*reserve]) + binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(R_2d_array[1][3][0:20]) - binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][3][20:40])
                     c_2 = binary_abs(H_2d_array[0][3][0:reserve]) - binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(R_2d_array[1][3][20:40]) - binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][3][0:20])
-                    H_2d_array[0][3] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[0][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[1][3][reserve:2*reserve]) + binary_abs(Q_2d_array[1][1][0:reserve]) * binary_abs(R_2d_array[1][3][0:20]) - binary_abs(Q_2d_array[1][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][3][20:40])
                     c_2 = binary_abs(H_2d_array[1][3][0:reserve]) - binary_abs(Q_2d_array[1][1][0:reserve]) * binary_abs(R_2d_array[1][3][20:40]) - binary_abs(Q_2d_array[1][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][3][0:20])
-                    H_2d_array[1][3] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[1][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[2][3][reserve:2*reserve]) + binary_abs(Q_2d_array[2][1][0:reserve]) * binary_abs(R_2d_array[1][3][0:20]) - binary_abs(Q_2d_array[2][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][3][20:40])
                     c_2 = binary_abs(H_2d_array[2][3][0:reserve]) - binary_abs(Q_2d_array[2][1][0:reserve]) * binary_abs(R_2d_array[1][3][20:40]) - binary_abs(Q_2d_array[2][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][3][0:20])
-                    H_2d_array[2][3] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[2][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[3][3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(R_2d_array[1][3][0:20]) - binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][3][20:40])
                     c_2 = binary_abs(H_2d_array[3][3][0:reserve]) - binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(R_2d_array[1][3][20:40]) - binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(R_2d_array[1][3][0:20])
-                    H_2d_array[3][3] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[3][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
 
                     #iteration 3
                     a_1 = binary_abs(H_2d_array[0][2][0:reserve]) ** 2
@@ -326,24 +311,25 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     temp = a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8
                     # R_2d_array[2][2] = R_format(sqrt_approximate(bin(temp)[2:].zfill(50)),0,20)
                     R_2d_array[2][2] = Q_format(int_to_bin(int(math.sqrt(temp) / 2**(reserve - 18))),20)
+                    print("R33:", binary_abs(R_2d_array[2][2]) / 2**16)
 
                     #calculate normalized orthogonal vector
                     temp = round(binary_abs(H_2d_array[0][2][0:reserve]) / int(R_2d_array[2][2],2))
-                    Q_2d_array[0][2] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[0][2] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[0][2][reserve:2*reserve]) / int(R_2d_array[2][2],2))
-                    Q_2d_array[0][2] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[0][2] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[1][2][0:reserve]) / int(R_2d_array[2][2],2))
-                    Q_2d_array[1][2] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[1][2] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[1][2][reserve:2*reserve]) / int(R_2d_array[2][2],2))
-                    Q_2d_array[1][2] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[1][2] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[2][2][0:reserve]) / int(R_2d_array[2][2],2))
-                    Q_2d_array[2][2] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[2][2] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[2][2][reserve:2*reserve]) / int(R_2d_array[2][2],2))
-                    Q_2d_array[2][2] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[2][2] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[3][2][0:reserve]) / int(R_2d_array[2][2],2))
-                    Q_2d_array[3][2] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[3][2] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[3][2][reserve:2*reserve]) / int(R_2d_array[2][2],2))
-                    Q_2d_array[3][2] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[3][2] += Q_format(int_to_bin(temp), reserve)
 
                     #calculate inner products
                     b_1 = binary_abs(Q_2d_array[0][2][0:reserve]) * binary_abs(H_2d_array[0][3][0:reserve]) + binary_abs(Q_2d_array[0][2][reserve:2*reserve]) * binary_abs(H_2d_array[0][3][reserve:2*reserve])
@@ -354,22 +340,22 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     b_6 = -binary_abs(Q_2d_array[2][2][0:reserve]) * binary_abs(H_2d_array[2][3][reserve:2*reserve]) + binary_abs(Q_2d_array[2][2][reserve:2*reserve]) * binary_abs(H_2d_array[2][3][0:reserve])
                     b_7 = binary_abs(Q_2d_array[3][2][0:reserve]) * binary_abs(H_2d_array[3][3][0:reserve]) + binary_abs(Q_2d_array[3][2][reserve:2*reserve]) * binary_abs(H_2d_array[3][3][reserve:2*reserve])
                     b_8 = -binary_abs(Q_2d_array[3][2][0:reserve]) * binary_abs(H_2d_array[3][3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][2][reserve:2*reserve]) * binary_abs(H_2d_array[3][3][0:reserve])
-                    R_2d_array[2][3] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-12], 20)
-                    R_2d_array[2][3] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-12], 20)
+                    R_2d_array[2][3] = Q_format(int_to_bin(b_2 + b_4 + b_6 + b_8)[:-10], 20)
+                    R_2d_array[2][3] += Q_format(int_to_bin(b_1 + b_3 + b_5 + b_7)[:-10], 20)
 
                     #calculate orthogonal vector h4
                     c_1 = binary_abs(H_2d_array[0][3][reserve:2*reserve]) + binary_abs(Q_2d_array[0][2][0:reserve]) * binary_abs(R_2d_array[2][3][0:20]) - binary_abs(Q_2d_array[0][2][reserve:2*reserve]) * binary_abs(R_2d_array[2][3][20:40])
                     c_2 = binary_abs(H_2d_array[0][3][0:reserve]) - binary_abs(Q_2d_array[0][2][0:reserve]) * binary_abs(R_2d_array[2][3][20:40]) - binary_abs(Q_2d_array[0][2][reserve:2*reserve]) * binary_abs(R_2d_array[2][3][0:20])
-                    H_2d_array[0][3] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[0][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[1][3][reserve:2*reserve]) + binary_abs(Q_2d_array[1][2][0:reserve]) * binary_abs(R_2d_array[2][3][0:20]) - binary_abs(Q_2d_array[1][2][reserve:2*reserve]) * binary_abs(R_2d_array[2][3][20:40])
                     c_2 = binary_abs(H_2d_array[1][3][0:reserve]) - binary_abs(Q_2d_array[1][2][0:reserve]) * binary_abs(R_2d_array[2][3][20:40]) - binary_abs(Q_2d_array[1][2][reserve:2*reserve]) * binary_abs(R_2d_array[2][3][0:20])
-                    H_2d_array[1][3] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[1][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[2][3][reserve:2*reserve]) + binary_abs(Q_2d_array[2][2][0:reserve]) * binary_abs(R_2d_array[2][3][0:20]) - binary_abs(Q_2d_array[2][2][reserve:2*reserve]) * binary_abs(R_2d_array[2][3][20:40])
                     c_2 = binary_abs(H_2d_array[2][3][0:reserve]) - binary_abs(Q_2d_array[2][2][0:reserve]) * binary_abs(R_2d_array[2][3][20:40]) - binary_abs(Q_2d_array[2][2][reserve:2*reserve]) * binary_abs(R_2d_array[2][3][0:20])
-                    H_2d_array[2][3] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[2][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
                     c_1 = binary_abs(H_2d_array[3][3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][2][0:reserve]) * binary_abs(R_2d_array[2][3][0:20]) - binary_abs(Q_2d_array[3][2][reserve:2*reserve]) * binary_abs(R_2d_array[2][3][20:40])
                     c_2 = binary_abs(H_2d_array[3][3][0:reserve]) - binary_abs(Q_2d_array[3][2][0:reserve]) * binary_abs(R_2d_array[2][3][20:40]) - binary_abs(Q_2d_array[3][2][reserve:2*reserve]) * binary_abs(R_2d_array[2][3][0:20])
-                    H_2d_array[3][3] = Q_format(int_to_bin(c_2), 24) + Q_format(int_to_bin(c_1), 24)
+                    H_2d_array[3][3] = Q_format(int_to_bin(c_2), reserve) + Q_format(int_to_bin(c_1), reserve)
 
                     #iteration 4
                     a_1 = binary_abs(H_2d_array[0][3][0:reserve]) ** 2
@@ -383,24 +369,25 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     temp = a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8
                     # R_2d_array[3][3] = R_format(sqrt_approximate(bin(temp)[2:].zfill(50)),0,20)
                     R_2d_array[3][3] = Q_format(int_to_bin(int(math.sqrt(temp) / 2**(reserve - 18))),20)
+                    print("R44:", binary_abs(R_2d_array[3][3]) / 2**16)
 
                     #calculate normalized orthogonal vector
                     temp = round(binary_abs(H_2d_array[0][3][0:reserve]) / int(R_2d_array[3][3],2))
-                    Q_2d_array[0][3] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[0][3] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[0][3][reserve:2*reserve]) / int(R_2d_array[3][3],2))
-                    Q_2d_array[0][3] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[0][3] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[1][3][0:reserve]) / int(R_2d_array[3][3],2))
-                    Q_2d_array[1][3] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[1][3] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[1][3][reserve:2*reserve]) / int(R_2d_array[3][3],2))
-                    Q_2d_array[1][3] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[1][3] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[2][3][0:reserve]) / int(R_2d_array[3][3],2))
-                    Q_2d_array[2][3] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[2][3] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[2][3][reserve:2*reserve]) / int(R_2d_array[3][3],2))
-                    Q_2d_array[2][3] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[2][3] += Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[3][3][0:reserve]) / int(R_2d_array[3][3],2))
-                    Q_2d_array[3][3] = Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[3][3] = Q_format(int_to_bin(temp), reserve)
                     temp = round(binary_abs(H_2d_array[3][3][reserve:2*reserve]) / int(R_2d_array[3][3],2))
-                    Q_2d_array[3][3] += Q_format(int_to_bin(temp), 24)
+                    Q_2d_array[3][3] += Q_format(int_to_bin(temp), reserve)
 
                     #calculate y_hat
                     d_1 = binary_abs(Q_2d_array[0][0][0:reserve]) * binary_abs(y_array[0][0:reserve]) + binary_abs(Q_2d_array[0][0][reserve:2*reserve]) * binary_abs(y_array[0][reserve:2*reserve])
@@ -411,8 +398,8 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     d_6 = -binary_abs(Q_2d_array[2][0][0:reserve]) * binary_abs(y_array[2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][0][reserve:2*reserve]) * binary_abs(y_array[2][0:reserve])
                     d_7 = binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(y_array[3][0:reserve]) + binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(y_array[3][reserve:2*reserve])
                     d_8 = -binary_abs(Q_2d_array[3][0][0:reserve]) * binary_abs(y_array[3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][0][reserve:2*reserve]) * binary_abs(y_array[3][0:reserve])
-                    y_hat_array[0] = Q_format(int_to_bin(d_2 + d_4 + d_6 + d_8)[:-12], 20)
-                    y_hat_array[0] += Q_format(int_to_bin(d_1 + d_3 + d_5 + d_7)[:-12], 20)
+                    y_hat_array[0] = Q_format(int_to_bin(d_2 + d_4 + d_6 + d_8)[:-10], 20)
+                    y_hat_array[0] += Q_format(int_to_bin(d_1 + d_3 + d_5 + d_7)[:-10], 20)
 
                     d_1 = binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(y_array[0][0:reserve]) + binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(y_array[0][reserve:2*reserve])
                     d_2 = -binary_abs(Q_2d_array[0][1][0:reserve]) * binary_abs(y_array[0][reserve:2*reserve]) + binary_abs(Q_2d_array[0][1][reserve:2*reserve]) * binary_abs(y_array[0][0:reserve])
@@ -422,8 +409,8 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     d_6 = -binary_abs(Q_2d_array[2][1][0:reserve]) * binary_abs(y_array[2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][1][reserve:2*reserve]) * binary_abs(y_array[2][0:reserve])
                     d_7 = binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(y_array[3][0:reserve]) + binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(y_array[3][reserve:2*reserve])
                     d_8 = -binary_abs(Q_2d_array[3][1][0:reserve]) * binary_abs(y_array[3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][1][reserve:2*reserve]) * binary_abs(y_array[3][0:reserve])
-                    y_hat_array[1] = Q_format(int_to_bin(d_2 + d_4 + d_6 + d_8)[:-12], 20)
-                    y_hat_array[1] += Q_format(int_to_bin(d_1 + d_3 + d_5 + d_7)[:-12], 20)
+                    y_hat_array[1] = Q_format(int_to_bin(d_2 + d_4 + d_6 + d_8)[:-10], 20)
+                    y_hat_array[1] += Q_format(int_to_bin(d_1 + d_3 + d_5 + d_7)[:-10], 20)
 
                     d_1 = binary_abs(Q_2d_array[0][2][0:reserve]) * binary_abs(y_array[0][0:reserve]) + binary_abs(Q_2d_array[0][2][reserve:2*reserve]) * binary_abs(y_array[0][reserve:2*reserve])
                     d_2 = -binary_abs(Q_2d_array[0][2][0:reserve]) * binary_abs(y_array[0][reserve:2*reserve]) + binary_abs(Q_2d_array[0][2][reserve:2*reserve]) * binary_abs(y_array[0][0:reserve])
@@ -433,8 +420,8 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     d_6 = -binary_abs(Q_2d_array[2][2][0:reserve]) * binary_abs(y_array[2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][2][reserve:2*reserve]) * binary_abs(y_array[2][0:reserve])
                     d_7 = binary_abs(Q_2d_array[3][2][0:reserve]) * binary_abs(y_array[3][0:reserve]) + binary_abs(Q_2d_array[3][2][reserve:2*reserve]) * binary_abs(y_array[3][reserve:2*reserve])
                     d_8 = -binary_abs(Q_2d_array[3][2][0:reserve]) * binary_abs(y_array[3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][2][reserve:2*reserve]) * binary_abs(y_array[3][0:reserve])
-                    y_hat_array[2] = Q_format(int_to_bin(d_2 + d_4 + d_6 + d_8)[:-12], 20)
-                    y_hat_array[2] += Q_format(int_to_bin(d_1 + d_3 + d_5 + d_7)[:-12], 20)
+                    y_hat_array[2] = Q_format(int_to_bin(d_2 + d_4 + d_6 + d_8)[:-10], 20)
+                    y_hat_array[2] += Q_format(int_to_bin(d_1 + d_3 + d_5 + d_7)[:-10], 20)
                     
                     d_1 = binary_abs(Q_2d_array[0][3][0:reserve]) * binary_abs(y_array[0][0:reserve]) + binary_abs(Q_2d_array[0][3][reserve:2*reserve]) * binary_abs(y_array[0][reserve:2*reserve])
                     d_2 = -binary_abs(Q_2d_array[0][3][0:reserve]) * binary_abs(y_array[0][reserve:2*reserve]) + binary_abs(Q_2d_array[0][3][reserve:2*reserve]) * binary_abs(y_array[0][0:reserve])
@@ -444,8 +431,8 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     d_6 = -binary_abs(Q_2d_array[2][3][0:reserve]) * binary_abs(y_array[2][reserve:2*reserve]) + binary_abs(Q_2d_array[2][3][reserve:2*reserve]) * binary_abs(y_array[2][0:reserve])
                     d_7 = binary_abs(Q_2d_array[3][3][0:reserve]) * binary_abs(y_array[3][0:reserve]) + binary_abs(Q_2d_array[3][3][reserve:2*reserve]) * binary_abs(y_array[3][reserve:2*reserve])
                     d_8 = -binary_abs(Q_2d_array[3][3][0:reserve]) * binary_abs(y_array[3][reserve:2*reserve]) + binary_abs(Q_2d_array[3][3][reserve:2*reserve]) * binary_abs(y_array[3][0:reserve])
-                    y_hat_array[3] = Q_format(int_to_bin(d_2 + d_4 + d_6 + d_8)[:-12], 20)
-                    y_hat_array[3] += Q_format(int_to_bin(d_1 + d_3 + d_5 + d_7)[:-12], 20)
+                    y_hat_array[3] = Q_format(int_to_bin(d_2 + d_4 + d_6 + d_8)[:-10], 20)
+                    y_hat_array[3] += Q_format(int_to_bin(d_1 + d_3 + d_5 + d_7)[:-10], 20)
                     hex_string = ''.join(hex(int(R_2d_array[3][3][i:i+4], 2))[2:] for i in range(0, len(R_2d_array[3][3]), 4))
                     hex_string += ''.join(hex(int(R_2d_array[2][3][i:i+4], 2))[2:] for i in range(0, len(R_2d_array[2][3]), 4))
                     hex_string += ''.join(hex(int(R_2d_array[1][3][i:i+4], 2))[2:] for i in range(0, len(R_2d_array[1][3]), 4))
@@ -462,7 +449,8 @@ with open('..\Matlab\Result\out_y_hat_SNR10_P1_result.txt', 'w') as file_2:
                     hex_string += ''.join(hex(int(y_hat_array[1][i:i+4], 2))[2:] for i in range(0, len(y_hat_array[1]), 4))
                     hex_string += ''.join(hex(int(y_hat_array[0][i:i+4], 2))[2:] for i in range(0, len(y_hat_array[0]), 4))
                     file_2.write(hex_string + "\n")
-                    break
+                    # break
+                    
 
 # # Binary string to convert to hexadecimal
 # binary_string = '101010'
