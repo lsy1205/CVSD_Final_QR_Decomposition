@@ -175,11 +175,7 @@ endmodule
 module Multiplier (
     input  [15:0] A,
     input  [15:0] B,
-    output [19:0] C
-); // bit number of C is incorrect, should adjust with square root
-    assign C = temp[19:0];
-    reg [31:0] temp;
-    always @(*) begin
-        temp = $signed(A) * $signed(B);
-    end 
+    output [31:0] C
+);
+    assign C = $signed(A) * $signed(B);
 endmodule
