@@ -15,32 +15,33 @@ module Divide(i_clk, i_rst, a, b, en, fin, result);
     parameter b_length = 3 + 16 + 8;
 
     // IO
-    input i_clk;
-    input i_rst;
+    input        i_clk;
+    input        i_rst;
     input [15:0] a; // S1.14
     input [15:0] b; // 2.14
-    input en;
+    input        en;
 
-    output fin;
+    output        fin;
     output [15:0] result;
 
     // reg and wire
-    reg [1:0] counter_r ,counter_w;
-    reg signed [a_length-1:0] temp_a_r, temp_a_w;
-    reg [b_length-1:0] temp_b_r, temp_b_w;
+    reg         [         1:0] counter_r ,counter_w;
+    reg signed  [a_length-1:0] temp_a_r, temp_a_w;
+    reg         [b_length-1:0] temp_b_r, temp_b_w;
     wire signed [a_length-1:0] format_a;
-    wire [b_length-1:0] format_b;
+    wire        [b_length-1:0] format_b;
 
     // continuous assignment
     assign format_a = a[15] ? {3'b111, a, 8'b0} : {3'b000, a, 8'b0};
     assign format_b = {3'b0, b, 8'b0};
-    assign result = temp_a_r[23:8];
-    assign fin = counter_r == 2'd3;
+    assign result   = temp_a_w[23:8];
+    assign fin      = counter_r == 2'd2;
 
     always @(*) begin
         counter_w = counter_r;
-        // temp_a_w  = temp_a_r;
-        // temp_b_w  = temp_b_r;
+        temp_a_w  = temp_a_r;
+        temp_b_w  = temp_b_r;
+        
         if (counter_r == 2'd0) begin
             counter_w = 2'd1;
             if ((|format_b[23:20])) begin
@@ -202,7 +203,7 @@ module Divide(i_clk, i_rst, a, b, en, fin, result);
             endcase
         end
         else if (counter_r == 2'd2) begin
-            counter_w = 2'd3;
+            counter_w = 2'd0;
             case (temp_b_r[18:15])
                 4'b0000: begin
                     temp_b_w = temp_b_r;
