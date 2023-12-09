@@ -11,8 +11,8 @@ module testbed;
     // inout port
     reg                      i_clk;
     reg                      i_rst;
-    wire  signed [I_DATA_W-1:0] i_data_a;
-    wire  signed [I_DATA_W-1:0] i_data_b;
+    wire signed [I_DATA_W-1:0] i_data_a;
+    wire signed [I_DATA_W-1:0] i_data_b;
     wire signed [O_DATA_W-1:0] o_data;
     wire fin;
     assign i_data_a = -5066;
@@ -56,11 +56,13 @@ module testbed;
     end
 
 
-    initial begin
+    always@(*) begin
             // $display("  Wrong! Total error: %d                      ", error);
-        # (9 * `CYCLE);
-        $display("result: ", $signed(o_data));
-        $finish;
+        if (fin) begin
+            $display("result: ", $signed(o_data));
+            # (2 * `CYCLE);
+            $finish;
+        end
     end    
 
     initial begin
