@@ -6,17 +6,15 @@
 module testbed;
     
     parameter I_DATA_W  = 16;
-    parameter O_DATA_W  = 17;
+    parameter O_DATA_W  = 16;
 
     // inout port
     reg                      i_clk;
-    reg                      i_rst_n;
+    reg                      i_rst;
     wire  signed [I_DATA_W-1:0] i_data_a;
     wire  signed [I_DATA_W-1:0] i_data_b;
     wire signed [O_DATA_W-1:0] o_data;
-    wire temp;
-    wire temp2;
-    wire signed [159:0] o_y;
+    wire fin;
     assign i_data_a = -5066;
     assign i_data_b = 10028;
     // self defined
@@ -28,14 +26,22 @@ module testbed;
     //     .inst_a(i_data_a), 
     //     .root_inst(o_data)
     // );
-    QR_Engine qr (
+    // QR_Engine qr (
+    //     .i_clk(i_clk),
+    //     .i_rst(i_rst_n),
+    //     .i_trig(1'b1),
+    //     .i_data({i_data_a,i_data_b}),
+    //     .o_y_hat(o_y)
+    // );
+    Divide divide (
         .i_clk(i_clk),
-        .i_rst(i_rst_n),
-        .i_trig(1'b1),
-        .i_data({i_data_a,i_data_b}),
-        .o_y_hat(o_y)
+        .i_rst(i_rst),
+        .a(i_data_a),
+        .b(i_data_b),
+        .en(1'b1),
+        .fin(fin),
+        .result(o_data)
     );
-
     initial i_clk = 0;
     always #(`CYCLE/2.0) i_clk = ~i_clk; 
 
@@ -45,15 +51,15 @@ module testbed;
     end
 
     initial begin
-        i_rst_n  = 1;
+        i_rst  = 0;
         reset;
     end
 
 
     initial begin
             // $display("  Wrong! Total error: %d                      ", error);
-        # (10 * `CYCLE);
-        $display("result: %b", $signed(o_y[15:0]));
+        # (9 * `CYCLE);
+        $display("result: ", $signed(o_data));
         $finish;
     end    
 
@@ -67,9 +73,9 @@ module testbed;
 
     task reset; begin
         # ( 0.25 * `CYCLE);
-        i_rst_n = 1;    
+        i_rst = 1;    
         # ((`RST_DELAY) * `CYCLE);
-        i_rst_n = 0;    
+        i_rst = 0;    
     end endtask
 
 endmodule

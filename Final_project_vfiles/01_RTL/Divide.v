@@ -46,8 +46,8 @@ module Divide(i_clk, i_rst, a, b, en, fin, result);
                 end
                 else if ((|format_b[21:20])) begin
                     if (format_b[21]) begin
-                        temp_b_w = b;
-                        temp_a_w = a;
+                        temp_b_w = format_b;
+                        temp_a_w = format_a;
                     end
                     else if (format_b[20]) begin
                         temp_b_w = format_b << 1;
