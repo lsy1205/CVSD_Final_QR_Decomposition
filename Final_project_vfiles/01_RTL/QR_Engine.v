@@ -103,8 +103,8 @@ sram_256x8 mem3(
 Divide div0(
     .i_clk(i_clk),
     .i_rst(i_rst),
-    .a({temp_a[18:0], 8'b0}), // change name
-    .b({3'b0, temp3_r[15:0], 8'b0}), // change name
+    .a(a[15:0]), // change name
+    .b(b[15:0]), // change name
     .en(),
     .fin(div_fin), // change name
     .result(temp1[15:0]) // change name
