@@ -41,7 +41,10 @@ reg [1:0] state_w, state_r;
 reg [7:0] counter_w, counter_r;
 reg [3:0] record_w, record_r;
 reg [2:0] div_counter_w, div_counter_r;
-reg [6:0] proc_counter_w, proc_counter_r;
+reg [2:0] sqrt_counter_w, sqrt_counter_r;
+reg [2:0] first_proc_counter_w, first_proc_counter_r;
+reg [5:0] second_proc_counter_w, second_proc_counter_r;
+reg [1:0] iter_w, iter_r;
 reg [4:0] address_counter_w, address_counter_r;
 
 // Memory Blocks
@@ -86,11 +89,12 @@ wire [15:0] div_result;
 
 //usual store register
 reg [31:0] H_w [0:3][0:3], H_r [0:3][0:3];
-reg [31:0] temp_result_w [0:3], temp_result_r [0:3];
+reg [31:0] temp_result_w [0:7], temp_result_r [0:7];
 reg [3:0] group_number_w, group_number_r;
 reg [2:0] col_w, col_r;
 reg [1:0] row_w, row_r;
 reg [33:0] temp;
+reg [33:0] temp2;
 
 // ---------------------------------------------------------------------------
 // Continuous Assignment
@@ -222,23 +226,38 @@ end
 
 // Logic
 always @(*) begin
+    //data IO
     y_hat_w = y_hat_r;
     r_w = r_r;
-    counter_w = counter_r;
-    record_w = record_r;
-    div_counter_w = div_counter_r;
-    group_number_w = group_number_r;
-    address_counter_w = address_counter_r;
-    row_w = row_r;
-    col_w = col_r;
-    proc_counter_w = proc_counter_r;
     rd_vld = 0;
     last_data = 0;
-    sqrt_a = 0;
-    sqrt_en_w = 0;
+    //sram write
+    row_w = row_r;
+    col_w = col_r;
+    counter_w = counter_r;
+    //process
+    first_proc_counter_w = first_proc_counter_r;
+    second_proc_counter_w = second_proc_counter_r;
+    group_number_w = group_number_r;
+    iter_w = iter_r;
+    //div control
+    div_counter_w = div_counter_r;
     div_a = 0;
     div_b = 0;
     div_en_w = 0;
+    //sqrt control
+    sqrt_counter_w = sqrt_counter_r;
+    sqrt_en_w = 0;
+    sqrt_a = 0;
+    //sram read
+    address_counter_w = address_counter_r;
+    for (i = 0; i < 4; i = i + 1) begin
+        CEN[i] = 1;
+        for(j = 0; j < 4; j = j + 1) begin
+            H_w[i][j] = H_r[i][j];
+        end
+    end
+    //mul
     mul_a1 = 0;
     mul_a2 = 0;
     mul_a3 = 0;
@@ -251,15 +270,10 @@ always @(*) begin
     mul_b4 = 0;
     mul_b5 = 0;
     mul_b6 = 0;
-    for (i = 0; i < 4; i = i + 1) begin
+    //temp store data
+    for (i = 0; i < 8; i = i + 1) begin
         temp_result_w[i] = temp_result_r[i];
     end 
-    for (i = 0; i < 4; i = i + 1) begin
-        CEN[i] = 1;
-        for(j = 0; j < 4; j = j + 1) begin
-            H_w[i][j] = H_r[i][j];
-        end
-    end
 
     case(state_r)
         S_READ: begin
@@ -298,20 +312,23 @@ always @(*) begin
             end
         end
         S_CALC: begin
-            proc_counter_w = proc_counter_r + 1;
+            first_proc_counter_w = first_proc_counter_r + 1;
+            second_proc_counter_w = second_proc_counter_r + 1;
+
             // reset signal
             if (rd_vld == 1) begin
                 address_counter_w = 0;
-                proc_counter_w = 0;
+                first_proc_counter_w = 0;
                 group_number_w = group_number_r + 1;
             end
             if (last_data) begin
                 group_number_w = 0;
             end
+            // end reset signal
             
             // Sram access
             if (address_counter_r != 16) begin
-                if (proc_counter_r != 0) begin
+                if (first_proc_counter_r != 0) begin
                     H_w[address_counter_r[1:0]][address_counter_r[3:2]] = {Q[0],Q[1],Q[2],Q[3]};
                     address_counter_w = address_counter_r + 1;
                     for (i = 0; i < 4; i = i + 1) begin
@@ -330,87 +347,273 @@ always @(*) begin
             end
             // end Sram access
 
-            // multipliers folding
-            case(proc_counter_r)
-                7'd2: begin
+            // sqrt control
+            if (sqrt_counter_r != 0 && sqrt_counter_r != 4) begin
+                sqrt_en_w = 1;
+                sqrt_counter_w = sqrt_counter_r + 1;
+            end
+            if (sqrt_counter_r == 4) begin
+                sqrt_counter_w = 0;
+                div_en_w = 1;
+                div_counter_w = 1;
+            end
+            if (sqrt_counter_r == 1) begin
+                sqrt_a = {1'b0, temp_result_r[0]};
+            end
+            // end sqrt control
+
+            // divide control
+            if (div_counter_r == 1) begin
+                //different iteration is different
+                if (iter_r == 0) begin
+                    r_w[19:2] = sqrt_result;
+                end
+                else if (iter_r == 1) begin
+                    r_w[79:62] = sqrt_result;
+                end
+                else if (iter_r == 2) begin
+                    r_w[179:162] = sqrt_result;
+                end
+                else if (iter_r == 3) begin
+                    r_w[319:302] = sqrt_result;
+                end
+            end
+            if (div_counter_r != 0 && div_counter_r != 24) begin
+                div_en_w = 1;
+                div_counter_w = div_counter_r + 1;
+            end
+
+            if (div_counter_r == 24) begin
+                div_counter_w = 0;
+                second_proc_counter_w = 1;
+            end
+            // iteration 0, the result will store in y_hat_r[159:32]
+            
+
+            // multipliers folding and main logic
+            case (first_proc_counter_r)
+                3'd2: begin
                     mul_a1 = H_r[0][0][31:16];
                     mul_b1 = H_r[0][0][31:16];
                     mul_a2 = H_r[0][0][15:0];
                     mul_b2 = H_r[0][0][15:0];
                     temp_result_w[0] = mul_c1[30:0] + mul_c2[30:0];
                 end
-                7'd3: begin
+                3'd3: begin
                     mul_a1 = H_r[1][0][31:16];
                     mul_b1 = H_r[1][0][31:16];
                     mul_a2 = H_r[1][0][15:0];
                     mul_b2 = H_r[1][0][15:0];
                     temp_result_w[1] = mul_c1[30:0] + mul_c2[30:0];
                 end
-                7'd4: begin
+                3'd4: begin
                     mul_a1 = H_r[2][0][31:16];
                     mul_b1 = H_r[2][0][31:16];
                     mul_a2 = H_r[2][0][15:0];
                     mul_b2 = H_r[2][0][15:0];
                     temp_result_w[2] = mul_c1[30:0] + mul_c2[30:0];
                 end
-                7'd5: begin
+                3'd5: begin
                     mul_a1 = H_r[3][0][31:16];
                     mul_b1 = H_r[3][0][31:16];
                     mul_a2 = H_r[3][0][15:0];
                     mul_b2 = H_r[3][0][15:0];
                     temp_result_w[3] = mul_c1[30:0] + mul_c2[30:0];
                 end
-
-
-            // end multiplier folding
-                7'd6: begin
+                3'd6: begin
                     temp = (temp_result_r[0] + temp_result_r[1]) + (temp_result_r[2] + temp_result_r[3]);
                     temp_result_w[0] = temp[31:0];
                     sqrt_en_w = 1;
-                end
-                7'd7: begin
-                    sqrt_a = {1'b0, temp[31:0]};
-                    // sqrt_a = {1'b0, temp_result_r[0]};
-                    sqrt_en_w = 1;
-                end
-                7'd8: begin
-                    // sqrt_a = {1'b0, temp_result_r[0]};
-                    sqrt_en_w = 1;
-                end
-                7'd9: begin
-                    // sqrt_a = {1'b0, temp_result_r[0]};
-                    div_en_w = 1;
-                    sqrt_en_w = 1;
-                end
-                7'd10: begin
-                    // sqrt_a = {1'b0, temp_result_r[0]};
-                    // sqrt_en = 1;
-                    r_w[19:2] = sqrt_result;
-                    div_en_w = 1;
-                    div_a = H_r[0][0][31:16];
-                    div_b = sqrt_result;
-                end
-                7'd11: begin
-                    div_en_w = 1;
-                end
-                7'd12: begin
-                    div_en_w = 1;
-                end
-                7'd13: begin
-                    H_w[0][0][31:16] = div_result;
-                    y_hat_w = div_result;
+                    sqrt_counter_w = 1;
                 end
             endcase
             
-            if (proc_counter_r == 11) begin
-                record_w = record_r + 1;
-                proc_counter_w = 0;
-                rd_vld = 1;
-                if (record_r == 9) begin
-                    last_data = 1;
-                    record_w = 0;
-                end
+            // complex mul 
+            // r = c(a+b) - b(c+d)
+            // i = c(a+b) + a(d-c)
+            if (iter_r == 0) begin
+                case (second_proc_counter_r)
+                    6'd1: begin
+                        // a = y_hat_r[143:128]  b = y_hat_r[159:144]  c = H_r[0][1][15:0]  d = H_r[0][1][31:16]
+                        mul_a1 = $signed(y_hat_r[143:128]) + $signed(y_hat_r[159:144]); //Q11 = y_hat_r[159:128] 
+                        mul_b1 = H_r[0][1][15:0];
+                        temp_result_w[0] = mul_c1;
+                        mul_a2 = $signed(H_r[0][1][15:0]) + $signed(H_r[0][1][31:16]);
+                        mul_b2 = y_hat_r[159:144];
+                        temp_result_w[1] = mul_c2;
+                        mul_a3 = $signed(H_r[0][1][31:16]) - $signed(H_r[0][1][15:0]);
+                        mul_b3 = y_hat_r[143:128];
+                        temp_result_w[2] = mul_c3;
+                        // a = y_hat_r[111:96]  b = y_hat_r[127:112]  c = H_r[1][1][15:0]  d = H_r[1][1][31:16]
+                        mul_a4 = $signed(y_hat_r[111:96]) + $signed(y_hat_r[127:112]); //Q12 = y_hat_r[127:96] 
+                        mul_b4 = H_r[1][1][15:0];
+                        temp_result_w[3] = mul_c4;
+                        mul_a5 = $signed(H_r[1][1][15:0]) + $signed(H_r[1][1][31:16]);
+                        mul_b5 = y_hat_r[127:112];
+                        temp_result_w[4] = mul_c5;
+                        mul_a6 = $signed(H_r[1][1][31:16]) - $signed(H_r[1][1][15:0]);
+                        mul_b6 = y_hat_r[111:96];
+                        temp_result_w[5] = mul_c6;
+                    end
+                    6'd2: begin
+                        temp_result_w[6] = ($signed(temp_result_r[0]) - $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) - $signed(temp_result_r[4]));
+                        temp_result_w[7] = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5]));
+
+                        // a = y_hat_r[79:64]  b = y_hat_r[95:80]  c = H_r[2][1][15:0]  d = H_r[2][1][31:16]
+                        mul_a1 = $signed(y_hat_r[79:64]) + $signed(y_hat_r[95:80]); //Q13 = y_hat_r[95:64] 
+                        mul_b1 = H_r[2][1][15:0];
+                        temp_result_w[0] = mul_c1;
+                        mul_a2 = $signed(H_r[2][1][15:0]) + $signed(H_r[2][1][31:16]);
+                        mul_b2 = y_hat_r[95:80];
+                        temp_result_w[1] = mul_c2;
+                        mul_a3 = $signed(H_r[2][1][31:16]) - $signed(H_r[2][1][15:0]);
+                        mul_b3 = y_hat_r[79:64];
+                        temp_result_w[2] = mul_c3;
+                        // a = y_hat_r[47:32]  b = y_hat_r[63:48]  c = H_r[3][1][15:0]  d = H_r[3][1][31:16]
+                        mul_a4 = $signed(y_hat_r[79:64]) + $signed(y_hat_r[63:48]); //Q14 = y_hat_r[63:32] 
+                        mul_b4 = H_r[3][1][15:0];
+                        temp_result_w[3] = mul_c4;
+                        mul_a5 = $signed(H_r[3][1][15:0]) + $signed(H_r[3][1][31:16]);
+                        mul_b5 = y_hat_r[63:48];
+                        temp_result_w[4] = mul_c5;
+                        mul_a6 = $signed(H_r[3][1][31:16]) - $signed(H_r[3][1][15:0]);
+                        mul_b6 = y_hat_r[47:32];
+                        temp_result_w[5] = mul_c6;
+                    end
+                    6'd3: begin
+                        temp = ($signed(temp_result_r[0]) - $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) - $signed(temp_result_r[4])) + $signed(temp_result_r[6]);
+                        temp2 = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5])) + $signed(temp_result_r[7]);
+                        r_w[59:40] = {temp2[33],temp2[30:12]}; // R12
+                        r_w[39:20] = {temp[33],temp[30:12]};
+
+                        // a = y_hat_r[143:128]  b = y_hat_r[159:144]  c = H_r[0][2][15:0]  d = H_r[0][2][31:16]
+                        mul_a1 = $signed(y_hat_r[143:128]) + $signed(y_hat_r[159:144]); //Q11 = y_hat_r[159:128] 
+                        mul_b1 = H_r[0][2][15:0];
+                        temp_result_w[0] = mul_c1;
+                        mul_a2 = $signed(H_r[0][2][15:0]) + $signed(H_r[0][2][31:16]);
+                        mul_b2 = y_hat_r[159:144];
+                        temp_result_w[1] = mul_c2;
+                        mul_a3 = $signed(H_r[0][2][31:16]) - $signed(H_r[0][2][15:0]);
+                        mul_b3 = y_hat_r[143:128];
+                        temp_result_w[2] = mul_c3;
+                        // a = y_hat_r[111:96]  b = y_hat_r[127:112]  c = H_r[1][2][15:0]  d = H_r[1][2][31:16]
+                        mul_a4 = $signed(y_hat_r[111:96]) + $signed(y_hat_r[127:112]); //Q12 = y_hat_r[127:96] 
+                        mul_b4 = H_r[1][2][15:0];
+                        temp_result_w[3] = mul_c4;
+                        mul_a5 = $signed(H_r[1][2][15:0]) + $signed(H_r[1][2][31:16]);
+                        mul_b5 = y_hat_r[127:112];
+                        temp_result_w[4] = mul_c5;
+                        mul_a6 = $signed(H_r[1][2][31:16]) - $signed(H_r[1][2][15:0]);
+                        mul_b6 = y_hat_r[111:96];
+                        temp_result_w[5] = mul_c6;
+                    end
+                    6'd4: begin
+                        temp_result_w[6] = ($signed(temp_result_r[0]) - $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) - $signed(temp_result_r[4]));
+                        temp_result_w[7] = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5]));
+
+                        // a = y_hat_r[79:64]  b = y_hat_r[95:80]  c = H_r[2][2][15:0]  d = H_r[2][2][31:16]
+                        mul_a1 = $signed(y_hat_r[79:64]) + $signed(y_hat_r[95:80]); //Q13 = y_hat_r[95:64] 
+                        mul_b1 = H_r[2][2][15:0];
+                        temp_result_w[0] = mul_c1;
+                        mul_a2 = $signed(H_r[2][2][15:0]) + $signed(H_r[2][2][31:16]);
+                        mul_b2 = y_hat_r[95:80];
+                        temp_result_w[1] = mul_c2;
+                        mul_a3 = $signed(H_r[2][2][31:16]) - $signed(H_r[2][2][15:0]);
+                        mul_b3 = y_hat_r[79:64];
+                        temp_result_w[2] = mul_c3;
+                        // a = y_hat_r[47:32]  b = y_hat_r[63:48]  c = H_r[3][2][15:0]  d = H_r[3][2][31:16]
+                        mul_a4 = $signed(y_hat_r[79:64]) + $signed(y_hat_r[63:48]); //Q14 = y_hat_r[63:32] 
+                        mul_b4 = H_r[3][2][15:0];
+                        temp_result_w[3] = mul_c4;
+                        mul_a5 = $signed(H_r[3][2][15:0]) + $signed(H_r[3][2][31:16]);
+                        mul_b5 = y_hat_r[63:48];
+                        temp_result_w[4] = mul_c5;
+                        mul_a6 = $signed(H_r[3][2][31:16]) - $signed(H_r[3][2][15:0]);
+                        mul_b6 = y_hat_r[47:32];
+                        temp_result_w[5] = mul_c6;
+                    end
+                    6'd5: begin
+                        temp = ($signed(temp_result_r[0]) - $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) - $signed(temp_result_r[4])) + $signed(temp_result_r[6]);
+                        temp2 = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5])) + $signed(temp_result_r[7]);
+                        r_w[119:100] = {temp2[33],temp2[30:12]}; // R13
+                        r_w[99:80] = {temp[33],temp[30:12]};
+
+                        // a = y_hat_r[143:128]  b = y_hat_r[159:144]  c = H_r[0][3][15:0]  d = H_r[0][3][31:16]
+                        mul_a1 = $signed(y_hat_r[143:128]) + $signed(y_hat_r[159:144]); //Q11 = y_hat_r[159:128] 
+                        mul_b1 = H_r[0][3][15:0];
+                        temp_result_w[0] = mul_c1;
+                        mul_a2 = $signed(H_r[0][3][15:0]) + $signed(H_r[0][3][31:16]);
+                        mul_b2 = y_hat_r[159:144];
+                        temp_result_w[1] = mul_c2;
+                        mul_a3 = $signed(H_r[0][3][31:16]) - $signed(H_r[0][3][15:0]);
+                        mul_b3 = y_hat_r[143:128];
+                        temp_result_w[2] = mul_c3;
+                        // a = y_hat_r[111:96]  b = y_hat_r[127:112]  c = H_r[1][3][15:0]  d = H_r[1][3][31:16]
+                        mul_a4 = $signed(y_hat_r[111:96]) + $signed(y_hat_r[127:112]); //Q12 = y_hat_r[127:96] 
+                        mul_b4 = H_r[1][3][15:0];
+                        temp_result_w[3] = mul_c4;
+                        mul_a5 = $signed(H_r[1][3][15:0]) + $signed(H_r[1][3][31:16]);
+                        mul_b5 = y_hat_r[127:112];
+                        temp_result_w[4] = mul_c5;
+                        mul_a6 = $signed(H_r[1][3][31:16]) - $signed(H_r[1][3][15:0]);
+                        mul_b6 = y_hat_r[111:96];
+                        temp_result_w[5] = mul_c6;
+                    end
+                    6'd6: begin
+                        temp_result_w[6] = ($signed(temp_result_r[0]) - $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) - $signed(temp_result_r[4]));
+                        temp_result_w[7] = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5]));
+
+                        // a = y_hat_r[79:64]  b = y_hat_r[95:80]  c = H_r[2][3][15:0]  d = H_r[2][3][31:16]
+                        mul_a1 = $signed(y_hat_r[79:64]) + $signed(y_hat_r[95:80]); //Q13 = y_hat_r[95:64] 
+                        mul_b1 = H_r[2][3][15:0];
+                        temp_result_w[0] = mul_c1;
+                        mul_a2 = $signed(H_r[2][3][15:0]) + $signed(H_r[2][3][31:16]);
+                        mul_b2 = y_hat_r[95:80];
+                        temp_result_w[1] = mul_c2;
+                        mul_a3 = $signed(H_r[2][3][31:16]) - $signed(H_r[2][3][15:0]);
+                        mul_b3 = y_hat_r[79:64];
+                        temp_result_w[2] = mul_c3;
+                        // a = y_hat_r[47:32]  b = y_hat_r[63:48]  c = H_r[3][3][15:0]  d = H_r[3][3][31:16]
+                        mul_a4 = $signed(y_hat_r[79:64]) + $signed(y_hat_r[63:48]); //Q14 = y_hat_r[63:32] 
+                        mul_b4 = H_r[3][3][15:0];
+                        temp_result_w[3] = mul_c4;
+                        mul_a5 = $signed(H_r[3][3][15:0]) + $signed(H_r[3][3][31:16]);
+                        mul_b5 = y_hat_r[63:48];
+                        temp_result_w[4] = mul_c5;
+                        mul_a6 = $signed(H_r[3][3][31:16]) - $signed(H_r[3][3][15:0]);
+                        mul_b6 = y_hat_r[47:32];
+                        temp_result_w[5] = mul_c6;
+                    end
+                    6'd7: begin
+                        temp = ($signed(temp_result_r[0]) - $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) - $signed(temp_result_r[4])) + $signed(temp_result_r[6]);
+                        temp2 = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5])) + $signed(temp_result_r[7]);
+                        r_w[219:200] = {temp2[33],temp2[30:12]}; //R14
+                        r_w[199:180] = {temp[33],temp[30:12]};
+
+                        // a = y_hat_r[79:64]  b = y_hat_r[95:80]  c = H_r[2][3][15:0]  d = H_r[2][3][31:16]
+                        // mul_a1 = $signed(r_r[59:40]) + $signed(y_hat_r[95:80]); //Q13 = y_hat_r[95:64] 
+                        // mul_b1 = H_r[2][3][15:0];
+                        // temp_result_w[0] = mul_c1;
+                        // mul_a2 = $signed(H_r[2][3][15:0]) + $signed(H_r[2][3][31:16]);
+                        // mul_b2 = y_hat_r[95:80];
+                        // temp_result_w[1] = mul_c2;
+                        // mul_a3 = $signed(H_r[2][3][31:16]) - $signed(H_r[2][3][15:0]);
+                        // mul_b3 = y_hat_r[79:64];
+                        // temp_result_w[2] = mul_c3;
+
+                        // mul_a4 = $signed(y_hat_r[79:64]) + $signed(y_hat_r[63:48]); //Q14 = y_hat_r[63:32] 
+                        // mul_b4 = H_r[3][3][15:0];
+                        // temp_result_w[3] = mul_c4;
+                        // mul_a5 = $signed(H_r[3][3][15:0]) + $signed(H_r[3][3][31:16]);
+                        // mul_b5 = y_hat_r[63:48];
+                        // temp_result_w[4] = mul_c5;
+                        // mul_a6 = $signed(H_r[3][3][31:16]) - $signed(H_r[3][3][15:0]);
+                        // mul_b6 = y_hat_r[47:32];
+                        // temp_result_w[5] = mul_c6;
+                    end
+                endcase
             end
+
         end
     endcase
 end
@@ -428,13 +631,16 @@ always @(posedge i_clk or posedge i_rst) begin
         record_r  <= 0;
         div_counter_r <= 0;
         group_number_r <= 0;
+        iter_r    <= 0;
         col_r     <= 1;
         row_r     <= 0;
-        proc_counter_r <= 0;
+        first_proc_counter_r <= 0;
+        second_proc_counter_r <= 0;
         address_counter_r <= 0;
+        sqrt_counter_r <= 0;
         sqrt_en_r <= 0;
         div_en_r  <= 0;
-        for (i = 0; i < 4; i = i + 1) begin
+        for (i = 0; i < 8; i = i + 1) begin
             temp_result_r[i] <= 0;
             for (j = 0; j < 4; j = j + 1) begin
                 H_r[i][j] <= 0;
@@ -449,13 +655,16 @@ always @(posedge i_clk or posedge i_rst) begin
         record_r <= record_w;
         div_counter_r <= div_counter_w;
         group_number_r <= group_number_w;
+        iter_r    <= iter_w;
         col_r    <= col_w;
         row_r    <= row_w;
-        proc_counter_r <= proc_counter_w;
+        first_proc_counter_r <= first_proc_counter_w;
+        second_proc_counter_r <= second_proc_counter_w;
         address_counter_r <= address_counter_w;
+        sqrt_counter_r <= sqrt_counter_w;
         sqrt_en_r <= sqrt_en_w;
         div_en_r  <= div_en_w;
-        for (i = 0; i < 4; i = i + 1) begin
+        for (i = 0; i < 8; i = i + 1) begin
             temp_result_r[i] <= temp_result_w[i];
             for (j = 0; j < 4; j = j + 1) begin
                 H_r[i][j] <= H_w[i][j];
