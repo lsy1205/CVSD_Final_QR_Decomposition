@@ -44,14 +44,14 @@ module Divide(i_clk, i_rst, a, b, en, fin, result);
     wire [a_length-1:0] add4_result;
     reg  [a_length-1:0] add5_a, add5_b;
     wire [a_length-1:0] add5_result;
-    reg  [a_length-1:0] add6_a, add6_b;
-    wire [a_length-1:0] add6_result;
-    reg  [a_length-1:0] add7_a, add7_b;
-    wire [a_length-1:0] add7_result;
-    reg  [a_length-1:0] add8_a, add8_b;
-    wire [a_length-1:0] add8_result;
-    reg  [a_length-1:0] add9_a, add9_b;
-    wire [a_length-1:0] add9_result;
+    // reg  [a_length-1:0] add6_a, add6_b;
+    // wire [a_length-1:0] add6_result;
+    // reg  [a_length-1:0] add7_a, add7_b;
+    // wire [a_length-1:0] add7_result;
+    // reg  [a_length-1:0] add8_a, add8_b;
+    // wire [a_length-1:0] add8_result;
+    // reg  [a_length-1:0] add9_a, add9_b;
+    // wire [a_length-1:0] add9_result;
 
     // modules
     adder27 add0(
@@ -84,35 +84,36 @@ module Divide(i_clk, i_rst, a, b, en, fin, result);
         .b(add5_b),
         .result(add5_result)
     );
-    adder27 add6(
-        .a(add6_a),
-        .b(add6_b),
-        .result(add6_result)
-    );
-    adder27 add7(
-        .a(add7_a),
-        .b(add7_b),
-        .result(add7_result)
-    );
-    adder27 add8(
-        .a(add8_a),
-        .b(add8_b),
-        .result(add8_result)
-    );
-    adder27 add9(
-        .a(add9_a),
-        .b(add9_b),
-        .result(add9_result)
-    );
+    // adder27 add6(
+    //     .a(add6_a),
+    //     .b(add6_b),
+    //     .result(add6_result)
+    // );
+    // adder27 add7(
+    //     .a(add7_a),
+    //     .b(add7_b),
+    //     .result(add7_result)
+    // );
+    // adder27 add8(
+    //     .a(add8_a),
+    //     .b(add8_b),
+    //     .result(add8_result)
+    // );
+    // adder27 add9(
+    //     .a(add9_a),
+    //     .b(add9_b),
+    //     .result(add9_result)
+    // );
 
     // continuous assignment
     assign format_a = a[15] ? {3'b111, a, 8'b0} : {3'b000, a, 8'b0};
     assign format_b = {3'b0, b, 8'b0};
-    assign result   = temp_a_w[23:8];
-    assign fin      = counter_r == 2'd2;
+    assign result   = temp_a_r[23:8];
+    assign fin      = counter_r == 2'd3;
 
     always @(*) begin
-        counter_w = (counter_r == 2'd2) ? 2'd0 : (counter_r + 1'b1);
+        // counter_w = (counter_r == 2'd2) ? 2'd0 : (counter_r + 1'b1);
+        counter_w = counter_r + 1'b1;
         temp_a_w  = temp_a_r;
         temp_b_w  = temp_b_r;
         
@@ -128,14 +129,14 @@ module Divide(i_clk, i_rst, a, b, en, fin, result);
         add4_b = {27'b0};
         add5_a = {27'b0};
         add5_b = {27'b0};
-        add6_a = {27'b0};
-        add6_b = {27'b0};
-        add7_a = {27'b0};
-        add7_b = {27'b0};
-        add8_a = {27'b0};
-        add8_b = {27'b0};
-        add9_a = {27'b0};
-        add9_b = {27'b0};
+        // add6_a = {27'b0};
+        // add6_b = {27'b0};
+        // add7_a = {27'b0};
+        // add7_b = {27'b0};
+        // add8_a = {27'b0};
+        // add8_b = {27'b0};
+        // add9_a = {27'b0};
+        // add9_b = {27'b0};
 
         case (counter_r)
             2'd0: begin
@@ -472,293 +473,293 @@ module Divide(i_clk, i_rst, a, b, en, fin, result);
                         temp_a_w = temp_a_r;
                     end
                     4'b0001: begin
-                        // temp_b_w = temp_b_r + (temp_b_r >> 8);
-                        // temp_a_w = temp_a_r + (temp_a_r >>> 8);
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        temp_b_w = add0_result;
-
-                        add2_a = temp_a_r;
-                        add2_b = temp_a_r >>> 8;
-                        temp_a_w = add2_result;
+                        temp_b_w = temp_b_r + (temp_b_r >> 8);
+                        temp_a_w = temp_a_r + (temp_a_r >>> 8);
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // temp_b_w = add0_result;
+ 
+                        // add2_a = temp_a_r;
+                        // add2_b = temp_a_r >>> 8;
+                        // temp_a_w = add2_result;
                     end
                     4'b0010: begin
-                        // temp_b_w = temp_b_r - (temp_b_r >> 6) + (temp_b_r >> 8);
-                        // temp_a_w = temp_a_r - (temp_a_r >>> 6) + (temp_a_r >>> 8);
-                        add0_a = temp_b_r;
-                        add0_b = -(temp_b_r >> 6);
-                        add1_a = temp_b_r >> 8;
-                        add1_b = add0_result;
-                        temp_b_w = add1_result;
+                        temp_b_w = temp_b_r - (temp_b_r >> 6) + (temp_b_r >> 8);
+                        temp_a_w = temp_a_r - (temp_a_r >>> 6) + (temp_a_r >>> 8);
+                        // add0_a = temp_b_r;
+                        // add0_b = -(temp_b_r >> 6);
+                        // add1_a = temp_b_r >> 8;
+                        // add1_b = add0_result;
+                        // temp_b_w = add1_result;
 
-                        add2_a = temp_a_r;
-                        add2_b = -(temp_a_r >>> 6);
-                        add3_a = temp_a_r >>> 8;
-                        add3_b = add2_result;
-                        temp_a_w = add3_result;
+                        // add2_a = temp_a_r;
+                        // add2_b = -(temp_a_r >>> 6);
+                        // add3_a = temp_a_r >>> 8;
+                        // add3_b = add2_result;
+                        // temp_a_w = add3_result;
                     end
                     4'b0011: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 6) + (temp_b_r >> 7));
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 6) + (temp_a_r >>> 7));
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 6;
-                        add1_b = temp_b_r >> 7;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        temp_b_w = add2_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 6) + (temp_b_r >> 7));
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 6) + (temp_a_r >>> 7));
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 6;
+                        // add1_b = temp_b_r >> 7;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // temp_b_w = add2_result;
 
-                        add3_a = temp_a_r;
-                        add3_b = temp_a_r >>> 8;
-                        add4_a = temp_a_r >>> 6;
-                        add4_b = temp_a_r >>> 7;
-                        add5_a = add3_result;
-                        add5_b = -(add4_result);
-                        temp_a_w = add5_result;
+                        // add3_a = temp_a_r;
+                        // add3_b = temp_a_r >>> 8;
+                        // add4_a = temp_a_r >>> 6;
+                        // add4_b = temp_a_r >>> 7;
+                        // add5_a = add3_result;
+                        // add5_b = -(add4_result);
+                        // temp_a_w = add5_result;
                     end
                     4'b0100: begin
-                        // temp_b_w = temp_b_r - (temp_b_r >> 5) + (temp_b_r >> 8);
-                        // temp_a_w = temp_a_r - (temp_a_r >>> 5) + (temp_a_r >>> 8);
-                        add0_a = temp_b_r;
-                        add0_b = -(temp_b_r >> 5);
-                        add1_a = temp_b_r >> 8;
-                        add1_b = add0_result;
-                        temp_b_w = add1_result;
+                        temp_b_w = temp_b_r - (temp_b_r >> 5) + (temp_b_r >> 8);
+                        temp_a_w = temp_a_r - (temp_a_r >>> 5) + (temp_a_r >>> 8);
+                        // add0_a = temp_b_r;
+                        // add0_b = -(temp_b_r >> 5);
+                        // add1_a = temp_b_r >> 8;
+                        // add1_b = add0_result;
+                        // temp_b_w = add1_result;
 
-                        add2_a = temp_a_r;
-                        add2_b = -(temp_a_r >>> 5);
-                        add3_a = temp_a_r >>> 8;
-                        add3_b = add2_result;
-                        temp_a_w = add3_result;
+                        // add2_a = temp_a_r;
+                        // add2_b = -(temp_a_r >>> 5);
+                        // add3_a = temp_a_r >>> 8;
+                        // add3_b = add2_result;
+                        // temp_a_w = add3_result;
                     end
                     4'b0101: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 5) + (temp_b_r >> 7));
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 5) + (temp_a_r >>> 7));
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 5;
-                        add1_b = temp_b_r >> 7;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        temp_b_w = add2_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 5) + (temp_b_r >> 7));
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 5) + (temp_a_r >>> 7));
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 5;
+                        // add1_b = temp_b_r >> 7;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // temp_b_w = add2_result;
 
-                        add3_a = temp_a_r;
-                        add3_b = temp_a_r >>> 8;
-                        add4_a = temp_a_r >>> 5;
-                        add4_b = temp_a_r >>> 7;
-                        add5_a = add3_result;
-                        add5_b = -(add4_result);
-                        temp_a_w = add5_result;
+                        // add3_a = temp_a_r;
+                        // add3_b = temp_a_r >>> 8;
+                        // add4_a = temp_a_r >>> 5;
+                        // add4_b = temp_a_r >>> 7;
+                        // add5_a = add3_result;
+                        // add5_b = -(add4_result);
+                        // temp_a_w = add5_result;
                     end
                     4'b0110: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 5) + (temp_b_r >> 6));
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 5) + (temp_a_r >>> 6));
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 5;
-                        add1_b = temp_b_r >> 6;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        temp_b_w = add2_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 5) + (temp_b_r >> 6));
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 5) + (temp_a_r >>> 6));
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 5;
+                        // add1_b = temp_b_r >> 6;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // temp_b_w = add2_result;
 
-                        add3_a = temp_a_r;
-                        add3_b = temp_a_r >>> 8;
-                        add4_a = temp_a_r >>> 5;
-                        add4_b = temp_a_r >>> 6;
-                        add5_a = add3_result;
-                        add5_b = -(add4_result);
-                        temp_a_w = add5_result;
+                        // add3_a = temp_a_r;
+                        // add3_b = temp_a_r >>> 8;
+                        // add4_a = temp_a_r >>> 5;
+                        // add4_b = temp_a_r >>> 6;
+                        // add5_a = add3_result;
+                        // add5_b = -(add4_result);
+                        // temp_a_w = add5_result;
                     end
                     4'b0111: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 5) + (temp_b_r >> 6)) - temp_b_r >> 7;
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 5) + (temp_a_r >>> 6)) - temp_a_r >>> 7;
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 5;
-                        add1_b = temp_b_r >> 6;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        add3_a = add2_result;
-                        add3_b = -(temp_b_r >> 7);
-                        temp_b_w = add3_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 5) + (temp_b_r >> 6)) - temp_b_r >> 7;
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 5) + (temp_a_r >>> 6)) - temp_a_r >>> 7;
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 5;
+                        // add1_b = temp_b_r >> 6;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // add3_a = add2_result;
+                        // add3_b = -(temp_b_r >> 7);
+                        // temp_b_w = add3_result;
 
-                        add4_a = temp_a_r;
-                        add4_b = temp_a_r >>> 8;
-                        add5_a = temp_a_r >>> 5;
-                        add5_b = temp_a_r >>> 6;
-                        add6_a = add4_result;
-                        add6_b = -(add5_result);
-                        add7_a = add6_result;
-                        add7_b = -(temp_a_r >>> 7);
-                        temp_a_w = add7_result;
+                        // add4_a = temp_a_r;
+                        // add4_b = temp_a_r >>> 8;
+                        // add5_a = temp_a_r >>> 5;
+                        // add5_b = temp_a_r >>> 6;
+                        // add6_a = add4_result;
+                        // add6_b = -(add5_result);
+                        // add7_a = add6_result;
+                        // add7_b = -(temp_a_r >>> 7);
+                        // temp_a_w = add7_result;
                     end
                     4'b1000: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - (temp_b_r >> 4);
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - (temp_a_r >>> 4);
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = add0_result;
-                        add1_b = -(temp_b_r >> 4);
-                        temp_b_w = add1_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - (temp_b_r >> 4);
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - (temp_a_r >>> 4);
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = add0_result;
+                        // add1_b = -(temp_b_r >> 4);
+                        // temp_b_w = add1_result;
 
-                        add2_a = temp_a_r;
-                        add2_b = temp_a_r >>> 8;
-                        add3_a = add2_result;
-                        add3_b = -(temp_a_r >>> 4);
-                        temp_a_w = add3_result;
+                        // add2_a = temp_a_r;
+                        // add2_b = temp_a_r >>> 8;
+                        // add3_a = add2_result;
+                        // add3_b = -(temp_a_r >>> 4);
+                        // temp_a_w = add3_result;
                     end
                     4'b1001: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 7));
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 7));
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 4;
-                        add1_b = temp_b_r >> 7;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        temp_b_w = add2_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 7));
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 7));
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 4;
+                        // add1_b = temp_b_r >> 7;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // temp_b_w = add2_result;
 
-                        add3_a = temp_a_r;
-                        add3_b = temp_a_r >>> 8;
-                        add4_a = temp_a_r >>> 4;
-                        add4_b = temp_a_r >>> 7;
-                        add5_a = add3_result;
-                        add5_b = -(add4_result);
-                        temp_a_w = add5_result;
+                        // add3_a = temp_a_r;
+                        // add3_b = temp_a_r >>> 8;
+                        // add4_a = temp_a_r >>> 4;
+                        // add4_b = temp_a_r >>> 7;
+                        // add5_a = add3_result;
+                        // add5_b = -(add4_result);
+                        // temp_a_w = add5_result;
                     end
                     4'b1010: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 7));
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 7));
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 4;
-                        add1_b = temp_b_r >> 7;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        temp_b_w = add2_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 7));
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 7));
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 4;
+                        // add1_b = temp_b_r >> 7;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // temp_b_w = add2_result;
 
-                        add3_a = temp_a_r;
-                        add3_b = temp_a_r >>> 8;
-                        add4_a = temp_a_r >>> 4;
-                        add4_b = temp_a_r >>> 7;
-                        add5_a = add3_result;
-                        add5_b = -(add4_result);
-                        temp_a_w = add5_result;
+                        // add3_a = temp_a_r;
+                        // add3_b = temp_a_r >>> 8;
+                        // add4_a = temp_a_r >>> 4;
+                        // add4_b = temp_a_r >>> 7;
+                        // add5_a = add3_result;
+                        // add5_b = -(add4_result);
+                        // temp_a_w = add5_result;
                     end
                     4'b1011: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 6)) - temp_b_r >> 7;
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 6)) - temp_a_r >>> 7;
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 4;
-                        add1_b = temp_b_r >> 6;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        add3_a = add2_result;
-                        add3_b = -(temp_b_r >> 7);
-                        temp_b_w = add3_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 6)) - temp_b_r >> 7;
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 6)) - temp_a_r >>> 7;
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 4;
+                        // add1_b = temp_b_r >> 6;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // add3_a = add2_result;
+                        // add3_b = -(temp_b_r >> 7);
+                        // temp_b_w = add3_result;
 
-                        add4_a = temp_a_r;
-                        add4_b = temp_a_r >>> 8;
-                        add5_a = temp_a_r >>> 4;
-                        add5_b = temp_a_r >>> 6;
-                        add6_a = add4_result;
-                        add6_b = -(add5_result);
-                        add7_a = add6_result;
-                        add7_b = -(temp_a_r >>> 7);
-                        temp_a_w = add7_result;
+                        // add4_a = temp_a_r;
+                        // add4_b = temp_a_r >>> 8;
+                        // add5_a = temp_a_r >>> 4;
+                        // add5_b = temp_a_r >>> 6;
+                        // add6_a = add4_result;
+                        // add6_b = -(add5_result);
+                        // add7_a = add6_result;
+                        // add7_b = -(temp_a_r >>> 7);
+                        // temp_a_w = add7_result;
                     end
                     4'b1100: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 5));
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 5));
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 4;
-                        add1_b = temp_b_r >> 5;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        temp_b_w = add2_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 5));
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 5));
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 4;
+                        // add1_b = temp_b_r >> 5;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // temp_b_w = add2_result;
 
-                        add3_a = temp_a_r;
-                        add3_b = temp_a_r >>> 8;
-                        add4_a = temp_a_r >>> 4;
-                        add4_b = temp_a_r >>> 5;
-                        add5_a = add3_result;
-                        add5_b = -(add4_result);
-                        temp_a_w = add5_result;
+                        // add3_a = temp_a_r;
+                        // add3_b = temp_a_r >>> 8;
+                        // add4_a = temp_a_r >>> 4;
+                        // add4_b = temp_a_r >>> 5;
+                        // add5_a = add3_result;
+                        // add5_b = -(add4_result);
+                        // temp_a_w = add5_result;
                     end
                     4'b1101: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 5)) - temp_b_r >> 7;
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 5)) - temp_a_r >>> 7;
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 4;
-                        add1_b = temp_b_r >> 5;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        add3_a = add2_result;
-                        add3_b = -(temp_b_r >> 7);
-                        temp_b_w = add3_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 5)) - temp_b_r >> 7;
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 5)) - temp_a_r >>> 7;
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 4;
+                        // add1_b = temp_b_r >> 5;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // add3_a = add2_result;
+                        // add3_b = -(temp_b_r >> 7);
+                        // temp_b_w = add3_result;
 
-                        add4_a = temp_a_r;
-                        add4_b = temp_a_r >>> 8;
-                        add5_a = temp_a_r >>> 4;
-                        add5_b = temp_a_r >>> 5;
-                        add6_a = add4_result;
-                        add6_b = -(add5_result);
-                        add7_a = add6_result;
-                        add7_b = -(temp_a_r >>> 7);
-                        temp_a_w = add7_result;
+                        // add4_a = temp_a_r;
+                        // add4_b = temp_a_r >>> 8;
+                        // add5_a = temp_a_r >>> 4;
+                        // add5_b = temp_a_r >>> 5;
+                        // add6_a = add4_result;
+                        // add6_b = -(add5_result);
+                        // add7_a = add6_result;
+                        // add7_b = -(temp_a_r >>> 7);
+                        // temp_a_w = add7_result;
                     end
                     4'b1110: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 5)) - temp_b_r >> 6;
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 5)) - temp_a_r >>> 6;
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 4;
-                        add1_b = temp_b_r >> 5;
-                        add2_a = add0_result;
-                        add2_b = -(add1_result);
-                        add3_a = add2_result;
-                        add3_b = -(temp_b_r >> 6);
-                        temp_b_w = add3_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 5)) - temp_b_r >> 6;
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 5)) - temp_a_r >>> 6;
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 4;
+                        // add1_b = temp_b_r >> 5;
+                        // add2_a = add0_result;
+                        // add2_b = -(add1_result);
+                        // add3_a = add2_result;
+                        // add3_b = -(temp_b_r >> 6);
+                        // temp_b_w = add3_result;
 
-                        add4_a = temp_a_r;
-                        add4_b = temp_a_r >>> 8;
-                        add5_a = temp_a_r >>> 4;
-                        add5_b = temp_a_r >>> 5;
-                        add6_a = add4_result;
-                        add6_b = -(add5_result);
-                        add7_a = add6_result;
-                        add7_b = -(temp_a_r >>> 6);
-                        temp_a_w = add7_result;
+                        // add4_a = temp_a_r;
+                        // add4_b = temp_a_r >>> 8;
+                        // add5_a = temp_a_r >>> 4;
+                        // add5_b = temp_a_r >>> 5;
+                        // add6_a = add4_result;
+                        // add6_b = -(add5_result);
+                        // add7_a = add6_result;
+                        // add7_b = -(temp_a_r >>> 6);
+                        // temp_a_w = add7_result;
                     end
                     4'b1111: begin
-                        // temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 5)) - ((temp_b_r >> 6) + (temp_b_r >> 7));
-                        // temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 5)) - ((temp_a_r >>> 6) + (temp_a_r >>> 7));
-                        add0_a = temp_b_r;
-                        add0_b = temp_b_r >> 8;
-                        add1_a = temp_b_r >> 4;
-                        add1_b = temp_b_r >> 5;
-                        add2_a = temp_b_r >> 6;
-                        add2_b = temp_b_r >> 7;
-                        add3_a = add0_result;
-                        add3_b = -(add1_result);
-                        add4_a = add3_result;
-                        add4_b = -(add2_result);
-                        temp_b_w = add4_result;
+                        temp_b_w = (temp_b_r + (temp_b_r >> 8)) - ((temp_b_r >> 4) + (temp_b_r >> 5)) - ((temp_b_r >> 6) + (temp_b_r >> 7));
+                        temp_a_w = (temp_a_r + (temp_a_r >>> 8)) - ((temp_a_r >>> 4) + (temp_a_r >>> 5)) - ((temp_a_r >>> 6) + (temp_a_r >>> 7));
+                        // add0_a = temp_b_r;
+                        // add0_b = temp_b_r >> 8;
+                        // add1_a = temp_b_r >> 4;
+                        // add1_b = temp_b_r >> 5;
+                        // add2_a = temp_b_r >> 6;
+                        // add2_b = temp_b_r >> 7;
+                        // add3_a = add0_result;
+                        // add3_b = -(add1_result);
+                        // add4_a = add3_result;
+                        // add4_b = -(add2_result);
+                        // temp_b_w = add4_result;
 
-                        add5_a = temp_a_r;
-                        add5_b = temp_a_r >>> 8;
-                        add6_a = temp_a_r >>> 4;
-                        add6_b = temp_a_r >>> 5;
-                        add7_a = temp_a_r >>> 6;
-                        add7_b = temp_a_r >>> 7;
-                        add8_a = add5_result;
-                        add8_b = -(add6_result);
-                        add9_a = add8_result;
-                        add9_b = -(add7_result);
-                        temp_a_w = add9_result;
+                        // add5_a = temp_a_r;
+                        // add5_b = temp_a_r >>> 8;
+                        // add6_a = temp_a_r >>> 4;
+                        // add6_b = temp_a_r >>> 5;
+                        // add7_a = temp_a_r >>> 6;
+                        // add7_b = temp_a_r >>> 7;
+                        // add8_a = add5_result;
+                        // add8_b = -(add6_result);
+                        // add9_a = add8_result;
+                        // add9_b = -(add7_result);
+                        // temp_a_w = add9_result;
                     end
                 endcase
             end
