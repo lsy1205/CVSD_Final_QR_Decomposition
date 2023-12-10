@@ -42,6 +42,7 @@ reg [7:0] counter_w, counter_r;
 reg [3:0] record_w, record_r;
 reg [2:0] div_counter_w, div_counter_r;
 reg [6:0] proc_counter_w, proc_counter_r;
+reg [4:0] address_counter_w, address_counter_r;
 
 // Memory Blocks
 wire [7:0] Q [0:3];  // read data
@@ -227,6 +228,7 @@ always @(*) begin
     record_w = record_r;
     div_counter_w = div_counter_r;
     group_number_w = group_number_r;
+    address_counter_w = address_counter_r;
     row_w = row_r;
     col_w = col_r;
     proc_counter_w = proc_counter_r;
@@ -249,10 +251,11 @@ always @(*) begin
     mul_b4 = 0;
     mul_b5 = 0;
     mul_b6 = 0;
-
+    for (i = 0; i < 4; i = i + 1) begin
+        temp_result_w[i] = temp_result_r[i];
+    end 
     for (i = 0; i < 4; i = i + 1) begin
         CEN[i] = 1;
-        temp_result_w[i] = temp_result_r[i];
         for(j = 0; j < 4; j = j + 1) begin
             H_w[i][j] = H_r[i][j];
         end
@@ -261,9 +264,6 @@ always @(*) begin
     case(state_r)
         S_READ: begin
             if (i_trig) begin
-                // if (counter_r == 199) begin
-                //     counter_w = 0;
-                // end
                 if (col_r == 4) begin
                     col_w = 0;
                     row_w = row_r + 1;
@@ -299,15 +299,40 @@ always @(*) begin
         end
         S_CALC: begin
             proc_counter_w = proc_counter_r + 1;
-            if (proc_counter_r < 20) begin
-                counter_w = counter_r + 1;
+            // reset signal
+            if (rd_vld == 1) begin
+                address_counter_w = 0;
+                proc_counter_w = 0;
+                group_number_w = group_number_r + 1;
             end
-            case(proc_counter_r)
-                7'd1: begin
-                    H_w[0][0] = {Q[0],Q[1],Q[2],Q[3]};
+            if (last_data) begin
+                group_number_w = 0;
+            end
+            
+            // Sram access
+            if (address_counter_r != 16) begin
+                if (proc_counter_r != 0) begin
+                    H_w[address_counter_r[1:0]][address_counter_r[3:2]] = {Q[0],Q[1],Q[2],Q[3]};
+                    address_counter_w = address_counter_r + 1;
+                    for (i = 0; i < 4; i = i + 1) begin
+                        A[i] = {group_number_r, address_counter_r+1};
+                    end    
+                end 
+                else begin
+                    for (i = 0; i < 4; i = i + 1) begin
+                        A[i] = {group_number_r, 4'b0};
+                    end 
                 end
+
+                for (i = 0; i < 4; i = i + 1) begin
+                    CEN[i] = 0;
+                end
+            end
+            // end Sram access
+
+            // multipliers folding
+            case(proc_counter_r)
                 7'd2: begin
-                    H_w[1][0] = {Q[0],Q[1],Q[2],Q[3]};
                     mul_a1 = H_r[0][0][31:16];
                     mul_b1 = H_r[0][0][31:16];
                     mul_a2 = H_r[0][0][15:0];
@@ -315,7 +340,6 @@ always @(*) begin
                     temp_result_w[0] = mul_c1[30:0] + mul_c2[30:0];
                 end
                 7'd3: begin
-                    H_w[2][0] = {Q[0],Q[1],Q[2],Q[3]};
                     mul_a1 = H_r[1][0][31:16];
                     mul_b1 = H_r[1][0][31:16];
                     mul_a2 = H_r[1][0][15:0];
@@ -323,7 +347,6 @@ always @(*) begin
                     temp_result_w[1] = mul_c1[30:0] + mul_c2[30:0];
                 end
                 7'd4: begin
-                    H_w[3][0] = {Q[0],Q[1],Q[2],Q[3]};
                     mul_a1 = H_r[2][0][31:16];
                     mul_b1 = H_r[2][0][31:16];
                     mul_a2 = H_r[2][0][15:0];
@@ -331,58 +354,52 @@ always @(*) begin
                     temp_result_w[2] = mul_c1[30:0] + mul_c2[30:0];
                 end
                 7'd5: begin
-                    H_w[0][1] = {Q[0],Q[1],Q[2],Q[3]};
                     mul_a1 = H_r[3][0][31:16];
                     mul_b1 = H_r[3][0][31:16];
                     mul_a2 = H_r[3][0][15:0];
                     mul_b2 = H_r[3][0][15:0];
                     temp_result_w[3] = mul_c1[30:0] + mul_c2[30:0];
                 end
+
+
+            // end multiplier folding
                 7'd6: begin
-                    H_w[1][1] = {Q[0],Q[1],Q[2],Q[3]};
                     temp = (temp_result_r[0] + temp_result_r[1]) + (temp_result_r[2] + temp_result_r[3]);
                     temp_result_w[0] = temp[31:0];
                     sqrt_en_w = 1;
                 end
                 7'd7: begin
-                    H_w[2][1] = {Q[0],Q[1],Q[2],Q[3]};
                     sqrt_a = {1'b0, temp[31:0]};
                     // sqrt_a = {1'b0, temp_result_r[0]};
                     sqrt_en_w = 1;
                 end
                 7'd8: begin
-                    H_w[3][1] = {Q[0],Q[1],Q[2],Q[3]};
                     // sqrt_a = {1'b0, temp_result_r[0]};
                     sqrt_en_w = 1;
                 end
                 7'd9: begin
-                    H_w[0][2] = {Q[0],Q[1],Q[2],Q[3]};
                     // sqrt_a = {1'b0, temp_result_r[0]};
-                    // div_en_w = 1;
+                    div_en_w = 1;
                     sqrt_en_w = 1;
                 end
                 7'd10: begin
-                    H_w[1][2] = {Q[0],Q[1],Q[2],Q[3]};
                     // sqrt_a = {1'b0, temp_result_r[0]};
                     // sqrt_en = 1;
                     r_w[19:2] = sqrt_result;
-                //     div_en_w = 1;
-                //     div_a = H_r[0][0][31:16];
-                //     div_b = sqrt_result;
+                    div_en_w = 1;
+                    div_a = H_r[0][0][31:16];
+                    div_b = sqrt_result;
                 end
-                // 7'd11: begin
-                //     H_w[2][2] = {Q[0],Q[1],Q[2],Q[3]};
-                //     div_en_w = 1;
-                // end
-                // 7'd12: begin
-                //     H_w[3][2] = {Q[0],Q[1],Q[2],Q[3]};
-                //     div_en_w = 1;
-                // end
-                // 7'd13: begin
-                //     H_w[0][3] = {Q[0],Q[1],Q[2],Q[3]};
-                //     H_w[0][0][31:16] = div_result;
-                //     y_hat_w = div_result;
-                // end
+                7'd11: begin
+                    div_en_w = 1;
+                end
+                7'd12: begin
+                    div_en_w = 1;
+                end
+                7'd13: begin
+                    H_w[0][0][31:16] = div_result;
+                    y_hat_w = div_result;
+                end
             endcase
             
             if (proc_counter_r == 11) begin
@@ -393,10 +410,6 @@ always @(*) begin
                     last_data = 1;
                     record_w = 0;
                 end
-            end
-            for (i = 0; i < 4; i = i + 1) begin
-                CEN[i] = 0;
-                A[i] = counter_r;
             end
         end
     endcase
@@ -418,6 +431,7 @@ always @(posedge i_clk or posedge i_rst) begin
         col_r     <= 1;
         row_r     <= 0;
         proc_counter_r <= 0;
+        address_counter_r <= 0;
         sqrt_en_r <= 0;
         div_en_r  <= 0;
         for (i = 0; i < 4; i = i + 1) begin
@@ -438,6 +452,7 @@ always @(posedge i_clk or posedge i_rst) begin
         col_r    <= col_w;
         row_r    <= row_w;
         proc_counter_r <= proc_counter_w;
+        address_counter_r <= address_counter_w;
         sqrt_en_r <= sqrt_en_w;
         div_en_r  <= div_en_w;
         for (i = 0; i < 4; i = i + 1) begin
