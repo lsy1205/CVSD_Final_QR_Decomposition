@@ -1,96 +1,192 @@
-5'b00000: begin
+6'b000000: begin
     reciprocal = 16'b0111111111111111;
 end
-5'b00001: begin
+6'b000001: begin
     reciprocal = 16'b0111111000001000;
 end
-5'b00010: begin
+6'b000010: begin
     reciprocal = 16'b0111110000011111;
 end
-5'b00011: begin
+6'b000011: begin
     reciprocal = 16'b0111101001000101;
 end
-5'b00100: begin
+6'b000100: begin
     reciprocal = 16'b0111100001111000;
 end
-5'b00101: begin
+6'b000101: begin
     reciprocal = 16'b0111011010111010;
 end
-5'b00110: begin
+6'b000110: begin
     reciprocal = 16'b0111010100000111;
 end
-5'b00111: begin
+6'b000111: begin
     reciprocal = 16'b0111001101100001;
 end
-5'b01000: begin
+6'b001000: begin
     reciprocal = 16'b0111000111000111;
 end
-5'b01001: begin
+6'b001001: begin
     reciprocal = 16'b0111000000111000;
 end
-5'b01010: begin
+6'b001010: begin
     reciprocal = 16'b0110111010110100;
 end
-5'b01011: begin
+6'b001011: begin
     reciprocal = 16'b0110110100111010;
 end
-5'b01100: begin
+6'b001100: begin
     reciprocal = 16'b0110101111001010;
 end
-5'b01101: begin
+6'b001101: begin
     reciprocal = 16'b0110101001100100;
 end
-5'b01110: begin
+6'b001110: begin
     reciprocal = 16'b0110100100000111;
 end
-5'b01111: begin
+6'b001111: begin
     reciprocal = 16'b0110011110110010;
 end
-5'b10000: begin
+6'b010000: begin
     reciprocal = 16'b0110011001100110;
 end
-5'b10001: begin
+6'b010001: begin
     reciprocal = 16'b0110010100100011;
 end
-5'b10010: begin
+6'b010010: begin
     reciprocal = 16'b0110001111100111;
 end
-5'b10011: begin
+6'b010011: begin
     reciprocal = 16'b0110001010110011;
 end
-5'b10100: begin
+6'b010100: begin
     reciprocal = 16'b0110000110000110;
 end
-5'b10101: begin
+6'b010101: begin
     reciprocal = 16'b0110000001100000;
 end
-5'b10110: begin
+6'b010110: begin
     reciprocal = 16'b0101111101000001;
 end
-5'b10111: begin
+6'b010111: begin
     reciprocal = 16'b0101111000101001;
 end
-5'b11000: begin
+6'b011000: begin
     reciprocal = 16'b0101110100010111;
 end
-5'b11001: begin
+6'b011001: begin
     reciprocal = 16'b0101110000001100;
 end
-5'b11010: begin
+6'b011010: begin
     reciprocal = 16'b0101101100000110;
 end
-5'b11011: begin
+6'b011011: begin
     reciprocal = 16'b0101101000000110;
 end
-5'b11100: begin
+6'b011100: begin
     reciprocal = 16'b0101100100001011;
 end
-5'b11101: begin
+6'b011101: begin
     reciprocal = 16'b0101100000010110;
 end
-5'b11110: begin
+6'b011110: begin
     reciprocal = 16'b0101011100100110;
 end
-5'b11111: begin
+6'b011111: begin
     reciprocal = 16'b0101011000111011;
+end
+6'b100000: begin
+    reciprocal = 16'b0101010101010101;
+end
+6'b100001: begin
+    reciprocal = 16'b0101010001110100;
+end
+6'b100010: begin
+    reciprocal = 16'b0101001110011000;
+end
+6'b100011: begin
+    reciprocal = 16'b0101001010111111;
+end
+6'b100100: begin
+    reciprocal = 16'b0101000111101100;
+end
+6'b100101: begin
+    reciprocal = 16'b0101000100011100;
+end
+6'b100110: begin
+    reciprocal = 16'b0101000001010000;
+end
+6'b100111: begin
+    reciprocal = 16'b0100111110001001;
+end
+6'b101000: begin
+    reciprocal = 16'b0100111011000101;
+end
+6'b101001: begin
+    reciprocal = 16'b0100111000000101;
+end
+6'b101010: begin
+    reciprocal = 16'b0100110101001000;
+end
+6'b101011: begin
+    reciprocal = 16'b0100110010010000;
+end
+6'b101100: begin
+    reciprocal = 16'b0100101111011010;
+end
+6'b101101: begin
+    reciprocal = 16'b0100101100101000;
+end
+6'b101110: begin
+    reciprocal = 16'b0100101001111001;
+end
+6'b101111: begin
+    reciprocal = 16'b0100100111001101;
+end
+6'b110000: begin
+    reciprocal = 16'b0100100100100101;
+end
+6'b110001: begin
+    reciprocal = 16'b0100100001111111;
+end
+6'b110010: begin
+    reciprocal = 16'b0100011111011100;
+end
+6'b110011: begin
+    reciprocal = 16'b0100011100111100;
+end
+6'b110100: begin
+    reciprocal = 16'b0100011010011111;
+end
+6'b110101: begin
+    reciprocal = 16'b0100011000000100;
+end
+6'b110110: begin
+    reciprocal = 16'b0100010101101100;
+end
+6'b110111: begin
+    reciprocal = 16'b0100010011010111;
+end
+6'b111000: begin
+    reciprocal = 16'b0100010001000100;
+end
+6'b111001: begin
+    reciprocal = 16'b0100001110110100;
+end
+6'b111010: begin
+    reciprocal = 16'b0100001100100110;
+end
+6'b111011: begin
+    reciprocal = 16'b0100001010011010;
+end
+6'b111100: begin
+    reciprocal = 16'b0100001000010001;
+end
+6'b111101: begin
+    reciprocal = 16'b0100000110001001;
+end
+6'b111110: begin
+    reciprocal = 16'b0100000100000100;
+end
+6'b111111: begin
+    reciprocal = 16'b0100000010000001;
 end
