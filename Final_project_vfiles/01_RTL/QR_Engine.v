@@ -347,6 +347,10 @@ always @(*) begin
                         y_hat_w[address_counter_r[1:0]] = {Q[0],Q[1],Q[2],Q[3]};
                         A = {2'b11, group_number_r, address_counter_w[1:0]};
                     end    
+                    else if (address_counter_r[3:0] == 15) begin
+                        H_w[address_counter_r[1:0]][address_counter_r[3:2]] = {Q[0],Q[1],Q[2],Q[3]};
+                        A = {2'b11, group_number_r, 2'b0};
+                    end
                     else begin
                         H_w[address_counter_r[1:0]][address_counter_r[3:2]] = {Q[0],Q[1],Q[2],Q[3]};
                         A = {group_number_r, address_counter_w[3:0]};
@@ -1133,17 +1137,6 @@ always @(*) begin
                         temp_result_w[5] = mul_c6;
                     end
 
-// Pattern    1#: Golden_r = 09be1fb09afc548ef308fb34408855ff0750586b03f04010870080b056ee0c96cfb7d2faf1f0e977
-// Pattern    1#: Output_r = 3e2a0ee807eb02bef111fb2af08922ff04e0586403f78010a100818057750c96cfb759faea20e970
-// Pattern    2#: Golden_r = 06d77fb407051d2fd7e10384af814b01ab90bd6e06c9cfe465ffe53fbec209f9307241fbed710006
-// Pattern    2#: Output_r = 06c14fb36c05273fd774038ddf814401aba0bd7406daefe41bffe56fbebf09f980723efbeda10004
-// Pattern    3#: Golden_r = 0821b0608c0102e06a19ffe8b022bdfeb020cfba04de7f168aff55007e5f0ba8e07cbb00ca10fae1
-// Pattern    3#: Output_r = 3628c0406bfae6406a6cffe89022defeaec25ac004e2ff15d9ff54e07ecc0ba9007d2400ca80fadc
-// Pattern    4#: Golden_r = 06cbffe26501bc1fc6e10704bfe396029b909c98f7c3bfb582fc5ebfb36d0b686fb1d5fab5416a7b
-// Pattern    4#: Output_r = 23878fa81efeed4fc6bb0709dfe36302a032a238f7bd0fb54bfc582fb2e10b688fb148faabe16a78
-// Pattern    5#: Golden_r = 0c859fd4150610502220f91d2fd84bfa00e0d395f9d7dfddc7f50e4fcecd11a4601331079910c348
-// Pattern    5#: Output_r = 2cdc4f996fcca2d02264f90eefd7f6f9f682ed98f9caefdd7ef4fb2fce8111a440135607a5d0c348
-
                     4'd3: begin
                         temp = ($signed(temp_result_r[0]) + $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[4])) + $signed(temp_result_r[6]);
                         temp2 = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5])) + $signed(temp_result_r[7]);
@@ -1160,6 +1153,7 @@ always @(*) begin
                         temp_result_w[1] = mul_c2;
                         mul_a3 = $signed(H_r[0][2][31:16]) - $signed(H_r[0][2][15:0]);
                         mul_b3 = {r_r[279], r_r[262+:15]};
+                        temp_result_w[2] = mul_c3;
 
                         mul_a4 = {temp2[20], temp2[2 +: 15]}; // R34
                         mul_b4 = H_r[1][2][15:0];
@@ -1173,12 +1167,13 @@ always @(*) begin
                     end
                     4'd5: begin
                         H_w[0][3][15:0] = $signed(H_r[0][3][15:0]) - $signed({temp_result_r[0][31], temp_result_r[0][14+:15]}) + $signed({temp_result_r[1][31], temp_result_r[1][14+:15]});
-                        H_w[0][3][31:16] = $signed(H_r[0][3][31:16]) - $signed({temp_result_r[0][31], temp_result_r[0][14+:15]}) - $signed({temp_result_r[2][31], temp_result_r[2][14+:15]});
+                        H_w[0][3][31:16] = $signed(H_r[0][3][31:16]) - $signed({temp_result_r[0][31], temp_result_r[0][14+:15]}) - $signed({temp_result_r[2][31], temp_result_r[2][14+:15]}); 
                         H_w[1][3][15:0] = $signed(H_r[1][3][15:0]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) + $signed({temp_result_r[4][31], temp_result_r[4][14+:15]});
                         H_w[1][3][31:16] = $signed(H_r[1][3][31:16]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) - $signed({temp_result_r[5][31], temp_result_r[5][14+:15]});
 
                         temp2[20:0] = $signed(r_r[279:260]) + $signed(r_r[299:280]);
                         mul_a1 = {temp2[20], temp2[2 +: 15]}; // R34
+                        mul_b1 = H_r[2][2][15:0];
                         temp_result_w[0] = mul_c1;
                         mul_a2 = $signed(H_r[2][2][15:0]) + $signed(H_r[2][2][31:16]);
                         mul_b2 = {r_r[299], r_r[282+:15]};
@@ -1239,7 +1234,6 @@ always @(*) begin
             if (mul_iter_r == 3) begin
                 case (second_proc_counter_r)
                     4'd1: begin
-
                         // a = H_r[0][0][15:0]  b = H_r[0][0][31:16]  c = y_hat_r[0][15:0]  d = y_hat_r[0][31:16]
                         mul_a1 = $signed(H_r[0][0][15:0]) - $signed(H_r[0][0][31:16]); 
                         mul_b1 = y_hat_r[0][15:0];
@@ -1449,14 +1443,14 @@ always @(*) begin
                         temp8 = ($signed(H_r[1][1]) + $signed(H_r[3][1]));
                         temp9 = ($signed(H_r[1][2]) + $signed(H_r[3][2]));
                         temp10 = ($signed(H_r[1][3]) + $signed(H_r[3][3]));
-                        y_hat_w[0] = {temp7[32], temp7[12 +: 15], temp3[32], temp3[12 +: 15]};
-                        y_hat_w[1] = {temp8[32], temp8[12 +: 15], temp4[32], temp4[12 +: 15]};
-                        y_hat_w[2] = {temp9[32], temp9[12 +: 15], temp5[32], temp5[12 +: 15]};
-                        y_hat_w[3] = {temp10[32], temp10[12 +: 15], temp6[32], temp6[12 +: 15]};
+                        y_hat_w[0] = {temp7[32], temp7[12 +: 19], temp3[32], temp3[12 +: 19]};
+                        y_hat_w[1] = {temp8[32], temp8[12 +: 19], temp4[32], temp4[12 +: 19]};
+                        y_hat_w[2] = {temp9[32], temp9[12 +: 19], temp5[32], temp5[12 +: 19]};
+                        y_hat_w[3] = {temp10[32], temp10[12 +: 19], temp6[32], temp6[12 +: 19]};
                         mul_iter_w = 0;
                         second_proc_counter_w = 0;
                         rd_vld_w = 1;
-                        if (group_number_r == 10) begin
+                        if (group_number_r == 9) begin
                             last_data_w = 1;
                         end
                     end
