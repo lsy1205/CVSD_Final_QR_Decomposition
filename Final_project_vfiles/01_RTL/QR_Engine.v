@@ -733,25 +733,26 @@ always @(*) begin
                         temp_result_w[6] = temp[31:0];
                         sqrt_en_w = 1;
                         sqrt_counter_w = 1;
-                    
-                        mul_a1 = $signed(r_r[99:80]) + $signed(r_r[119:100]); // R13
-                        mul_b1 = H_r[0][2][15:0];
+
+                        temp2[20:0] = $signed(r_r[99:80]) + $signed(r_r[119:100]);
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R13
+                        mul_b1 = H_r[0][0][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[0][2][15:0]) + $signed(H_r[0][2][31:16]);
-                        mul_b2 = r_r[119:100];
+                        mul_a2 = $signed(H_r[0][0][15:0]) + $signed(H_r[0][0][31:16]);
+                        mul_b2 = {r_r[119], r_r[102+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[0][2][31:16]) - $signed(H_r[0][2][15:0]);
-                        mul_b3 = r_r[99:80];
+                        mul_a3 = $signed(H_r[0][0][31:16]) - $signed(H_r[0][0][15:0]);
+                        mul_b3 = {r_r[99], r_r[82+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[99:80]) + $signed(r_r[119:100]);
-                        mul_b4 = H_r[1][2][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R13
+                        mul_b4 = H_r[1][0][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[1][2][15:0]) + $signed(H_r[1][2][31:16]);
-                        mul_b5 = r_r[119:100];
+                        mul_a5 = $signed(H_r[1][0][15:0]) + $signed(H_r[1][0][31:16]);
+                        mul_b5 = {r_r[119], r_r[102+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[1][2][31:16]) - $signed(H_r[1][2][15:0]);
-                        mul_b6 = r_r[99:80];
+                        mul_a6 = $signed(H_r[1][0][31:16]) - $signed(H_r[1][0][15:0]);
+                        mul_b6 = {r_r[99], r_r[82+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd12: begin
@@ -760,24 +761,25 @@ always @(*) begin
                         H_w[1][2][15:0] = $signed(H_r[1][2][15:0]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) + $signed({temp_result_r[4][31], temp_result_r[4][14+:15]});
                         H_w[1][2][31:16] = $signed(H_r[1][2][31:16]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) - $signed({temp_result_r[5][31], temp_result_r[5][14+:15]});
 
-                        mul_a1 = $signed(r_r[99:80]) + $signed(r_r[119:100]); // R13
-                        mul_b1 = H_r[2][2][15:0];
+                        temp2[20:0] = $signed(r_r[99:80]) + $signed(r_r[119:100]);
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R13
+                        mul_b1 = H_r[2][0][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[2][2][15:0]) + $signed(H_r[2][2][31:16]);
-                        mul_b2 = r_r[119:100];
+                        mul_a2 = $signed(H_r[2][0][15:0]) + $signed(H_r[2][0][31:16]);
+                        mul_b2 = {r_r[119], r_r[102+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[2][2][31:16]) - $signed(H_r[2][2][15:0]);
-                        mul_b3 = r_r[99:80];
+                        mul_a3 = $signed(H_r[2][0][31:16]) - $signed(H_r[2][0][15:0]);
+                        mul_b3 = {r_r[99], r_r[82+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[99:80]) + $signed(r_r[119:100]);
-                        mul_b4 = H_r[3][2][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R13
+                        mul_b4 = H_r[3][0][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[3][2][15:0]) + $signed(H_r[3][2][31:16]);
-                        mul_b5 = r_r[119:100];
+                        mul_a5 = $signed(H_r[3][0][15:0]) + $signed(H_r[3][0][31:16]);
+                        mul_b5 = {r_r[119], r_r[102+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[3][2][31:16]) - $signed(H_r[3][2][15:0]);
-                        mul_b6 = r_r[99:80];
+                        mul_a6 = $signed(H_r[3][0][31:16]) - $signed(H_r[3][0][15:0]);
+                        mul_b6 = {r_r[99], r_r[82+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd13: begin
@@ -785,25 +787,26 @@ always @(*) begin
                         H_w[2][2][31:16] = $signed(H_r[2][2][31:16]) - $signed({temp_result_r[0][31], temp_result_r[0][14+:15]}) - $signed({temp_result_r[2][31], temp_result_r[2][14+:15]});
                         H_w[3][2][15:0] = $signed(H_r[3][2][15:0]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) + $signed({temp_result_r[4][31], temp_result_r[4][14+:15]});
                         H_w[3][2][31:16] = $signed(H_r[3][2][31:16]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) - $signed({temp_result_r[5][31], temp_result_r[5][14+:15]});
-
-                        mul_a1 = $signed(r_r[199:180]) + $signed(r_r[219:200]); // R14
-                        mul_b1 = H_r[0][3][15:0];
+                        
+                        temp2[20:0] = $signed(r_r[199:180]) + $signed(r_r[219:200]);
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R14
+                        mul_b1 = H_r[0][0][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[0][3][15:0]) + $signed(H_r[0][3][31:16]);
-                        mul_b2 = r_r[219:200];
+                        mul_a2 = $signed(H_r[0][0][15:0]) + $signed(H_r[0][0][31:16]);
+                        mul_b2 = {r_r[219], r_r[202+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[0][3][31:16]) - $signed(H_r[0][3][15:0]);
-                        mul_b3 = r_r[199:180];
+                        mul_a3 = $signed(H_r[0][0][31:16]) - $signed(H_r[0][0][15:0]);
+                        mul_b3 = {r_r[199], r_r[182+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[199:180]) + $signed(r_r[219:200]);
-                        mul_b4 = H_r[1][3][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R14
+                        mul_b4 = H_r[1][0][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[1][3][15:0]) + $signed(H_r[1][3][31:16]);
-                        mul_b5 = r_r[219:200];
+                        mul_a5 = $signed(H_r[1][0][15:0]) + $signed(H_r[1][0][31:16]);
+                        mul_b5 = {r_r[219], r_r[202+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[1][3][31:16]) - $signed(H_r[1][3][15:0]);
-                        mul_b6 = r_r[199:180];
+                        mul_a6 = $signed(H_r[1][0][31:16]) - $signed(H_r[1][0][15:0]);
+                        mul_b6 = {r_r[199], r_r[182+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd14: begin
@@ -812,24 +815,25 @@ always @(*) begin
                         H_w[1][3][15:0] = $signed(H_r[1][3][15:0]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) + $signed({temp_result_r[4][31], temp_result_r[4][14+:15]});
                         H_w[1][3][31:16] = $signed(H_r[1][3][31:16]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) - $signed({temp_result_r[5][31], temp_result_r[5][14+:15]});
 
-                        mul_a1 = $signed(r_r[199:180]) + $signed(r_r[219:200]); // R14
-                        mul_b1 = H_r[2][3][15:0];
+                        temp2[20:0] = $signed(r_r[199:180]) + $signed(r_r[219:200]);
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R14
+                        mul_b1 = H_r[2][0][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[2][3][15:0]) + $signed(H_r[2][3][31:16]);
-                        mul_b2 = r_r[219:200];
+                        mul_a2 = $signed(H_r[2][0][15:0]) + $signed(H_r[2][0][31:16]);
+                        mul_b2 = {r_r[219], r_r[202+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[2][3][31:16]) - $signed(H_r[2][3][15:0]);
-                        mul_b3 = r_r[199:180];
+                        mul_a3 = $signed(H_r[2][0][31:16]) - $signed(H_r[2][0][15:0]);
+                        mul_b3 = {r_r[199], r_r[182+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[199:180]) + $signed(r_r[219:200]);
-                        mul_b4 = H_r[3][3][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R14
+                        mul_b4 = H_r[3][0][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[3][3][15:0]) + $signed(H_r[3][3][31:16]);
-                        mul_b5 = r_r[219:200];
+                        mul_a5 = $signed(H_r[3][0][15:0]) + $signed(H_r[3][0][31:16]);
+                        mul_b5 = {r_r[219], r_r[202+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[3][3][31:16]) - $signed(H_r[3][3][15:0]);
-                        mul_b6 = r_r[199:180];
+                        mul_a6 = $signed(H_r[3][0][31:16]) - $signed(H_r[3][0][15:0]);
+                        mul_b6 = {r_r[199], r_r[182+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd15: begin
@@ -949,24 +953,25 @@ always @(*) begin
                         r_w[259:240] = {temp2[33],temp2[30:12]}; // R24
                         r_w[239:220] = {temp[33],temp[30:12]};
 
-                        mul_a1 = $signed(r_r[139:120]) + $signed(r_r[159:140]); // R23
-                        mul_b1 = H_r[0][2][15:0];
+                        temp2[20:0] = {$signed(r_r[139:120]) + $signed(r_r[159:140])};
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R23
+                        mul_b1 = H_r[0][1][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[0][2][15:0]) + $signed(H_r[0][2][31:16]);
-                        mul_b2 = r_r[159:140];
+                        mul_a2 = $signed(H_r[0][1][15:0]) + $signed(H_r[0][1][31:16]);
+                        mul_b2 = {r_r[159], r_r[142+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[0][2][31:16]) - $signed(H_r[0][2][15:0]);
-                        mul_b3 = r_r[139:120];
+                        mul_a3 = $signed(H_r[0][1][31:16]) - $signed(H_r[0][1][15:0]);
+                        mul_b3 = {r_r[139], r_r[122+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[139:120]) + $signed(r_r[159:140]);
-                        mul_b4 = H_r[1][2][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R23
+                        mul_b4 = H_r[1][1][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[1][2][15:0]) + $signed(H_r[1][2][31:16]);
-                        mul_b5 = r_r[159:140];
+                        mul_a5 = $signed(H_r[1][1][15:0]) + $signed(H_r[1][1][31:16]);
+                        mul_b5 = {r_r[159], r_r[142+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[1][2][31:16]) - $signed(H_r[1][2][15:0]);
-                        mul_b6 = r_r[139:120];
+                        mul_a6 = $signed(H_r[1][1][31:16]) - $signed(H_r[1][1][15:0]);
+                        mul_b6 = {r_r[139], r_r[122+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd6: begin
@@ -975,24 +980,25 @@ always @(*) begin
                         H_w[1][2][15:0] = $signed(H_r[1][2][15:0]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) + $signed({temp_result_r[4][31], temp_result_r[4][14+:15]});
                         H_w[1][2][31:16] = $signed(H_r[1][2][31:16]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) - $signed({temp_result_r[5][31], temp_result_r[5][14+:15]});
 
-                        mul_a1 = $signed(r_r[139:120]) + $signed(r_r[159:140]); // R23
-                        mul_b1 = H_r[2][2][15:0];
+                        temp2[20:0] = {$signed(r_r[139:120]) + $signed(r_r[159:140])};
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R23
+                        mul_b1 = H_r[2][1][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[2][2][15:0]) + $signed(H_r[2][2][31:16]);
-                        mul_b2 = r_r[159:140];
+                        mul_a2 = $signed(H_r[2][1][15:0]) + $signed(H_r[2][1][31:16]);
+                        mul_b2 = {r_r[159], r_r[142+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[2][2][31:16]) - $signed(H_r[2][2][15:0]);
-                        mul_b3 = r_r[139:120];
+                        mul_a3 = $signed(H_r[2][1][31:16]) - $signed(H_r[2][1][15:0]);
+                        mul_b3 = {r_r[139], r_r[122+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[139:120]) + $signed(r_r[159:140]);
-                        mul_b4 = H_r[3][2][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R23
+                        mul_b4 = H_r[3][1][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[3][2][15:0]) + $signed(H_r[3][2][31:16]);
-                        mul_b5 = r_r[159:140];
+                        mul_a5 = $signed(H_r[3][1][15:0]) + $signed(H_r[3][1][31:16]);
+                        mul_b5 = {r_r[159], r_r[142+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[3][2][31:16]) - $signed(H_r[3][2][15:0]);
-                        mul_b6 = r_r[139:120];
+                        mul_a6 = $signed(H_r[3][1][31:16]) - $signed(H_r[3][1][15:0]);
+                        mul_b6 = {r_r[139], r_r[122+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd7: begin
@@ -1030,24 +1036,25 @@ always @(*) begin
                         sqrt_en_w = 1;
                         sqrt_counter_w = 1;
                     
-                        mul_a1 = $signed(r_r[239:220]) + $signed(r_r[259:240]); // R24
-                        mul_b1 = H_r[0][3][15:0];
+                        temp2[20:0] = {$signed(r_r[239:220]) + $signed(r_r[259:240])};
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R24
+                        mul_b1 = H_r[0][1][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[0][3][15:0]) + $signed(H_r[0][3][31:16]);
-                        mul_b2 = r_r[259:240];
+                        mul_a2 = $signed(H_r[0][1][15:0]) + $signed(H_r[0][1][31:16]);
+                        mul_b2 = {r_r[259], r_r[242+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[0][3][31:16]) - $signed(H_r[0][3][15:0]);
-                        mul_b3 = r_r[239:220];
+                        mul_a3 = $signed(H_r[0][1][31:16]) - $signed(H_r[0][1][15:0]);
+                        mul_b3 = {r_r[239], r_r[222+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[239:220]) + $signed(r_r[259:240]);
-                        mul_b4 = H_r[1][3][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R24
+                        mul_b4 = H_r[1][1][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[1][3][15:0]) + $signed(H_r[1][3][31:16]);
-                        mul_b5 = r_r[259:240];
+                        mul_a5 = $signed(H_r[1][1][15:0]) + $signed(H_r[1][1][31:16]);
+                        mul_b5 = {r_r[259], r_r[242+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[1][3][31:16]) - $signed(H_r[1][3][15:0]);
-                        mul_b6 = r_r[239:220];
+                        mul_a6 = $signed(H_r[1][1][31:16]) - $signed(H_r[1][1][15:0]);
+                        mul_b6 = {r_r[239], r_r[222+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd10: begin
@@ -1056,24 +1063,25 @@ always @(*) begin
                         H_w[1][3][15:0] = $signed(H_r[1][3][15:0]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) + $signed({temp_result_r[4][31], temp_result_r[4][14+:15]});
                         H_w[1][3][31:16] = $signed(H_r[1][3][31:16]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) - $signed({temp_result_r[5][31], temp_result_r[5][14+:15]});
 
-                        mul_a1 = $signed(r_r[239:220]) + $signed(r_r[259:240]); // R24
-                        mul_b1 = H_r[2][3][15:0];
+                        temp2[20:0] = {$signed(r_r[239:220]) + $signed(r_r[259:240])};
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R24
+                        mul_b1 = H_r[2][1][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[2][3][15:0]) + $signed(H_r[2][3][31:16]);
-                        mul_b2 = r_r[259:240];
+                        mul_a2 = $signed(H_r[2][1][15:0]) + $signed(H_r[2][1][31:16]);
+                        mul_b2 = {r_r[259], r_r[242+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[2][3][31:16]) - $signed(H_r[2][3][15:0]);
-                        mul_b3 = r_r[239:220];
+                        mul_a3 = $signed(H_r[2][1][31:16]) - $signed(H_r[2][1][15:0]);
+                        mul_b3 = {r_r[239], r_r[222+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[239:220]) + $signed(r_r[259:240]);
-                        mul_b4 = H_r[3][3][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R24
+                        mul_b4 = H_r[3][1][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[3][3][15:0]) + $signed(H_r[3][3][31:16]);
-                        mul_b5 = r_r[259:240];
+                        mul_a5 = $signed(H_r[3][1][15:0]) + $signed(H_r[3][1][31:16]);
+                        mul_b5 = {r_r[259], r_r[242+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[3][3][31:16]) - $signed(H_r[3][3][15:0]);
-                        mul_b6 = r_r[239:220];
+                        mul_a6 = $signed(H_r[3][1][31:16]) - $signed(H_r[3][1][15:0]);
+                        mul_b6 = {r_r[239], r_r[222+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd11: begin
@@ -1142,24 +1150,24 @@ always @(*) begin
                         r_w[279:260] = {temp[33],temp[30:12]};
                     end
                     4'd4: begin
-                        mul_a1 = $signed(r_r[279:260]) + $signed(r_r[299:280]); // R34
-                        mul_b1 = H_r[0][3][15:0];
+                        temp2[20:0] = {$signed(r_r[279:260]) + $signed(r_r[299:280])};
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R34
+                        mul_b1 = H_r[0][2][15:0];
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[0][3][15:0]) + $signed(H_r[0][3][31:16]);
-                        mul_b2 = r_r[299:280];
+                        mul_a2 = $signed(H_r[0][2][15:0]) + $signed(H_r[0][2][31:16]);
+                        mul_b2 = {r_r[299], r_r[282+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[0][3][31:16]) - $signed(H_r[0][3][15:0]);
-                        mul_b3 = r_r[279:260];
-                        temp_result_w[2] = mul_c3;
+                        mul_a3 = $signed(H_r[0][2][31:16]) - $signed(H_r[0][2][15:0]);
+                        mul_b3 = {r_r[279], r_r[262+:15]};
 
-                        mul_a4 = $signed(r_r[279:260]) + $signed(r_r[299:280]);
-                        mul_b4 = H_r[1][3][15:0];
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R34
+                        mul_b4 = H_r[1][2][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[1][3][15:0]) + $signed(H_r[1][3][31:16]);
-                        mul_b5 = r_r[299:280];
+                        mul_a5 = $signed(H_r[1][2][15:0]) + $signed(H_r[1][2][31:16]);
+                        mul_b5 = {r_r[299], r_r[282+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[1][3][31:16]) - $signed(H_r[1][3][15:0]);
-                        mul_b6 = r_r[279:260];
+                        mul_a6 = $signed(H_r[1][2][31:16]) - $signed(H_r[1][2][15:0]);
+                        mul_b6 = {r_r[279], r_r[262+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd5: begin
@@ -1168,24 +1176,26 @@ always @(*) begin
                         H_w[1][3][15:0] = $signed(H_r[1][3][15:0]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) + $signed({temp_result_r[4][31], temp_result_r[4][14+:15]});
                         H_w[1][3][31:16] = $signed(H_r[1][3][31:16]) - $signed({temp_result_r[3][31], temp_result_r[3][14+:15]}) - $signed({temp_result_r[5][31], temp_result_r[5][14+:15]});
 
-                        mul_a1 = $signed(r_r[279:260]) + $signed(r_r[299:280]); // R34
-                        mul_b1 = H_r[2][3][15:0];
+                        temp2[20:0] = {$signed(r_r[279:260]) + $signed(r_r[299:280])};
+                        mul_a1 = {temp2[20], temp2[2 +: 15]}; // R34
                         temp_result_w[0] = mul_c1;
-                        mul_a2 = $signed(H_r[2][3][15:0]) + $signed(H_r[2][3][31:16]);
-                        mul_b2 = r_r[299:280];
+                        mul_a2 = $signed(H_r[2][2][15:0]) + $signed(H_r[2][2][31:16]);
+                        mul_b2 = {r_r[299], r_r[282+:15]};
                         temp_result_w[1] = mul_c2;
-                        mul_a3 = $signed(H_r[2][3][31:16]) - $signed(H_r[2][3][15:0]);
-                        mul_b3 = r_r[279:260];
+                        mul_a3 = $signed(H_r[2][2][31:16]) - $signed(H_r[2][2][15:0]);
+                        mul_b3 = {r_r[279], r_r[262+:15]};
                         temp_result_w[2] = mul_c3;
 
-                        mul_a4 = $signed(r_r[279:260]) + $signed(r_r[299:280]);
-                        mul_b4 = H_r[3][3][15:0];
+
+
+                        mul_a4 = {temp2[20], temp2[2 +: 15]}; // R34
+                        mul_b4 = H_r[3][2][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[3][3][15:0]) + $signed(H_r[3][3][31:16]);
-                        mul_b5 = r_r[299:280];
+                        mul_a5 = $signed(H_r[3][2][15:0]) + $signed(H_r[3][2][31:16]);
+                        mul_b5 = {r_r[299], r_r[282+:15]};
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[3][3][31:16]) - $signed(H_r[3][3][15:0]);
-                        mul_b6 = r_r[279:260];
+                        mul_a6 = $signed(H_r[3][2][31:16]) - $signed(H_r[3][2][15:0]);
+                        mul_b6 = {r_r[279], r_r[262+:15]};
                         temp_result_w[5] = mul_c6;
                     end
                     4'd6: begin
