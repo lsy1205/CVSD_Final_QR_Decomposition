@@ -378,19 +378,15 @@ always @(*) begin
                 //different iteration is different
                 if (sqrt_iter_r == 0) begin
                     r_w[19:2] = {1'b0,sqrt_result};
-                    sqrt_iter_w = 1;
                 end
                 else if (sqrt_iter_r == 1) begin
                     r_w[79:62] = {1'b0,sqrt_result};
-                    sqrt_iter_w = 2;
                 end
                 else if (sqrt_iter_r == 2) begin
                     r_w[179:162] = {1'b0,sqrt_result};
-                    sqrt_iter_w = 3;
                 end
                 else if (sqrt_iter_r == 3) begin
                     r_w[319:302] = {1'b0,sqrt_result};
-                    sqrt_iter_w = 0;
                 end
                 div = sqrt_result[15:0];
                 temp_result_w[0] = reciprocal;
@@ -400,43 +396,45 @@ always @(*) begin
                 div_counter_w = div_counter_r + 1;
             end
             if (div_counter_r == 2) begin
-                mul_a1 = H_r[0][0][31:16];
+                mul_a1 = H_r[0][sqrt_iter_r][31:16];
                 mul_b1 = temp_result_r[0][15:0];
                 temp[30:0] = mul_c1[30:0] << (temp_result_r[1]);
-                H_w[0][0][31:16] = {mul_c1[31], temp[29:15]};
-                mul_a2 = H_r[0][0][15:0];
+                H_w[0][sqrt_iter_r][31:16] = {mul_c1[31], temp[29:15]};
+                mul_a2 = H_r[0][sqrt_iter_r][15:0];
                 mul_b2 = temp_result_r[0][15:0];
                 temp2[30:0] = mul_c2[30:0] << temp_result_r[1];
-                H_w[0][0][15:0] = {mul_c2[31], temp2[29:15]};
-                mul_a3 = H_r[1][0][31:16];
+                H_w[0][sqrt_iter_r][15:0] = {mul_c2[31], temp2[29:15]};
+                mul_a3 = H_r[1][sqrt_iter_r][31:16];
                 mul_b3 = temp_result_r[0][15:0];
                 temp3[30:0] = mul_c3[30:0] << temp_result_r[1];
-                H_w[1][0][31:16] = {mul_c3[31], temp3[29:15]};
-                mul_a4 = H_r[1][0][15:0];
+                H_w[1][sqrt_iter_r][31:16] = {mul_c3[31], temp3[29:15]};
+                mul_a4 = H_r[1][sqrt_iter_r][15:0];
                 mul_b4 = temp_result_r[0][15:0];
                 temp4[30:0] = mul_c4[30:0] << temp_result_r[1];
-                H_w[1][0][15:0] = {mul_c4[31], temp4[29:15]};
+                H_w[1][sqrt_iter_r][15:0] = {mul_c4[31], temp4[29:15]};
             end
             if (div_counter_r == 3) begin
                 div_counter_w = 0;
                 second_proc_counter_w = 1;
 
-                mul_a1 = H_r[2][0][31:16];
+                mul_a1 = H_r[2][sqrt_iter_r][31:16];
                 mul_b1 = temp_result_r[0][15:0];
                 temp[30:0] = mul_c1[30:0] << temp_result_r[1];
-                H_w[2][0][31:16] = {mul_c1[31], temp[29:15]};
-                mul_a2 = H_r[2][0][15:0];
+                H_w[2][sqrt_iter_r][31:16] = {mul_c1[31], temp[29:15]};
+                mul_a2 = H_r[2][sqrt_iter_r][15:0];
                 mul_b2 = temp_result_r[0][15:0];
                 temp2[30:0] = mul_c2[30:0] << temp_result_r[1];
-                H_w[2][0][15:0] = {mul_c2[31], temp2[29:15]};
-                mul_a3 = H_r[3][0][31:16];
+                H_w[2][sqrt_iter_r][15:0] = {mul_c2[31], temp2[29:15]};
+                mul_a3 = H_r[3][sqrt_iter_r][31:16];
                 mul_b3 = temp_result_r[0][15:0];
                 temp3[30:0] = mul_c3[30:0] << temp_result_r[1];
-                H_w[3][0][31:16] = {mul_c3[31], temp3[29:15]};
-                mul_a4 = H_r[3][0][15:0];
+                H_w[3][sqrt_iter_r][31:16] = {mul_c3[31], temp3[29:15]};
+                mul_a4 = H_r[3][sqrt_iter_r][15:0];
                 mul_b4 = temp_result_r[0][15:0];
                 temp4[30:0] = mul_c4[30:0] << temp_result_r[1];
-                H_w[3][0][15:0] = {mul_c4[31], temp4[29:15]};
+                H_w[3][sqrt_iter_r][15:0] = {mul_c4[31], temp4[29:15]};
+
+                sqrt_iter_w = sqrt_iter_r + 1;
             end
             // multipliers folding and main logic
             case (first_proc_counter_r)
@@ -607,7 +605,6 @@ always @(*) begin
                         mul_a6 = $signed(H_r[1][3][31:16]) - $signed(H_r[1][3][15:0]);
                         mul_b6 = H_r[1][0][15:0];
                         temp_result_w[5] = mul_c6;
-
                     end
                     4'd6: begin
                         temp_result_w[6] = ($signed(temp_result_r[0]) + $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[4]));
@@ -639,14 +636,6 @@ always @(*) begin
                         temp2 = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5])) + $signed(temp_result_r[7]);
                         r_w[219:200] = {temp2[33],temp2[30:12]}; //R14
                         r_w[199:180] = {temp[33],temp[30:12]};
-
-/////////////     should change projection mul_b to "e" and revise mul_a to temp !!!!! ///////////////
-/////////////     should change projection mul_b to "e" and revise mul_a to temp !!!!! ///////////////
-/////////////     should change projection mul_b to "e" and revise mul_a to temp !!!!! ///////////////
-/////////////     should change projection mul_b to "e" and revise mul_a to temp !!!!! ///////////////
-/////////////     should change projection mul_b to "e" and revise mul_a to temp !!!!! ///////////////
-/////////////     should change projection mul_b to "e" and revise mul_a to temp !!!!! ///////////////
-
 
                         // r = c(a+b) - b(c+d)
                         // i = c(a+b) + a(d-c)
@@ -937,7 +926,7 @@ always @(*) begin
                         mul_b3 = H_r[2][1][15:0];
                         temp_result_w[2] = mul_c3;
                         // a = H_r[3][1][15:0]  b = H_r[3][1][31:16]  c = H_r[3][3][15:0]  d = H_r[3][3][31:16]
-                        mul_a4 = $signed(H_r[2][1][15:0]) - $signed(H_r[3][1][31:16]); 
+                        mul_a4 = $signed(H_r[3][1][15:0]) - $signed(H_r[3][1][31:16]); 
                         mul_b4 = H_r[3][3][15:0];
                         temp_result_w[3] = mul_c4;
                         mul_a5 = $signed(H_r[3][3][15:0]) + $signed(H_r[3][3][31:16]);
@@ -1132,17 +1121,29 @@ always @(*) begin
                         mul_a3 = $signed(H_r[2][3][31:16]) - $signed(H_r[2][3][15:0]);
                         mul_b3 = H_r[2][2][15:0];
                         temp_result_w[2] = mul_c3;
-                        // a = H_r[3][2][15:0]  b = H_r[3][2][31:16]  c = H_r[3][2][15:0]  d = H_r[3][2][31:16]
+                        // a = H_r[3][2][15:0]  b = H_r[3][2][31:16]  c = H_r[3][3][15:0]  d = H_r[3][3][31:16]
                         mul_a4 = $signed(H_r[3][2][15:0]) - $signed(H_r[3][2][31:16]); 
-                        mul_b4 = H_r[3][2][15:0];
+                        mul_b4 = H_r[3][3][15:0];
                         temp_result_w[3] = mul_c4;
-                        mul_a5 = $signed(H_r[3][2][15:0]) + $signed(H_r[3][2][31:16]);
+                        mul_a5 = $signed(H_r[3][3][15:0]) + $signed(H_r[3][3][31:16]);
                         mul_b5 = H_r[3][2][31:16];
                         temp_result_w[4] = mul_c5;
-                        mul_a6 = $signed(H_r[3][2][31:16]) - $signed(H_r[3][2][15:0]);
+                        mul_a6 = $signed(H_r[3][3][31:16]) - $signed(H_r[3][3][15:0]);
                         mul_b6 = H_r[3][2][15:0];
                         temp_result_w[5] = mul_c6;
                     end
+
+// Pattern    1#: Golden_r = 09be1fb09afc548ef308fb34408855ff0750586b03f04010870080b056ee0c96cfb7d2faf1f0e977
+// Pattern    1#: Output_r = 3e2a0ee807eb02bef111fb2af08922ff04e0586403f78010a100818057750c96cfb759faea20e970
+// Pattern    2#: Golden_r = 06d77fb407051d2fd7e10384af814b01ab90bd6e06c9cfe465ffe53fbec209f9307241fbed710006
+// Pattern    2#: Output_r = 06c14fb36c05273fd774038ddf814401aba0bd7406daefe41bffe56fbebf09f980723efbeda10004
+// Pattern    3#: Golden_r = 0821b0608c0102e06a19ffe8b022bdfeb020cfba04de7f168aff55007e5f0ba8e07cbb00ca10fae1
+// Pattern    3#: Output_r = 3628c0406bfae6406a6cffe89022defeaec25ac004e2ff15d9ff54e07ecc0ba9007d2400ca80fadc
+// Pattern    4#: Golden_r = 06cbffe26501bc1fc6e10704bfe396029b909c98f7c3bfb582fc5ebfb36d0b686fb1d5fab5416a7b
+// Pattern    4#: Output_r = 23878fa81efeed4fc6bb0709dfe36302a032a238f7bd0fb54bfc582fb2e10b688fb148faabe16a78
+// Pattern    5#: Golden_r = 0c859fd4150610502220f91d2fd84bfa00e0d395f9d7dfddc7f50e4fcecd11a4601331079910c348
+// Pattern    5#: Output_r = 2cdc4f996fcca2d02264f90eefd7f6f9f682ed98f9caefdd7ef4fb2fce8111a440135607a5d0c348
+
                     4'd3: begin
                         temp = ($signed(temp_result_r[0]) + $signed(temp_result_r[1])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[4])) + $signed(temp_result_r[6]);
                         temp2 = ($signed(temp_result_r[0]) + $signed(temp_result_r[2])) + ($signed(temp_result_r[3]) + $signed(temp_result_r[5])) + $signed(temp_result_r[7]);
@@ -1185,8 +1186,6 @@ always @(*) begin
                         mul_a3 = $signed(H_r[2][2][31:16]) - $signed(H_r[2][2][15:0]);
                         mul_b3 = {r_r[279], r_r[262+:15]};
                         temp_result_w[2] = mul_c3;
-
-
 
                         mul_a4 = {temp2[20], temp2[2 +: 15]}; // R34
                         mul_b4 = H_r[3][2][15:0];
@@ -1240,6 +1239,7 @@ always @(*) begin
             if (mul_iter_r == 3) begin
                 case (second_proc_counter_r)
                     4'd1: begin
+
                         // a = H_r[0][0][15:0]  b = H_r[0][0][31:16]  c = y_hat_r[0][15:0]  d = y_hat_r[0][31:16]
                         mul_a1 = $signed(H_r[0][0][15:0]) - $signed(H_r[0][0][31:16]); 
                         mul_b1 = y_hat_r[0][15:0];
