@@ -12,13 +12,14 @@
 +incdir+/usr/cad/synopsys/synthesis/cur/dw/sim_ver/+
 
 // Change different packets
-+define+P1
++define+P6
 
 // Add your RTL & SRAM files
-QR_Engine.v
-Div_LUT.v
-Sqrt.v2k
-MUL.v2k
+../01_RTL/QR_Engine.v
+../01_RTL/DW_sqrt_pipe_inst.v
+../01_RTL/Div_LUT.v
+../01_RTL/DW_mult_pipe_inst.v
+../SRAM/sram_256x8/sram_256x8.v
 
 // tb
-testfixture.v
+../00_TESTBED/testfixture.v
