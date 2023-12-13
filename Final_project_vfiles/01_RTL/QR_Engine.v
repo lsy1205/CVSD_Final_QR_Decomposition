@@ -37,26 +37,30 @@ reg [39:0] y_hat_w [0:3], y_hat_r [0:3];
 reg [319:0] r_w, r_r;
 
 // Control
-reg [1:0] state_w, state_r;
-reg [7:0] counter_w, counter_r;
-reg [1:0] div_counter_w, div_counter_r;
-reg [2:0] sqrt_counter_w, sqrt_counter_r;
-reg [3:0] first_proc_counter_w, first_proc_counter_r;
-reg [3:0] second_proc_counter_w, second_proc_counter_r;
-reg [1:0] mul_iter_w, mul_iter_r;
-reg [1:0] sqrt_iter_w, sqrt_iter_r;
-reg [4:0] address_counter_w, address_counter_r;
+reg [1:0] state_r, state_w;
+reg [7:0] counter_r, counter_w;
+reg [3:0] record_r, record_w;
+
+reg [1:0] div_counter_r, div_counter_w;
+reg [2:0] sqrt_counter_r, sqrt_counter_w;
+
+reg [3:0] first_proc_counter_r, first_proc_counter_w;
+reg [3:0] second_proc_counter_r, second_proc_counter_w;
+
+reg [1:0] mul_iter_r, mul_iter_w;
+reg [1:0] sqrt_iter_r, sqrt_iter_w;
+reg [4:0] address_counter_r, address_counter_w;
 
 // Memory Blocks
 wire [7:0] Q [0:3];  // read data
-reg [7:0] A; // input address
-reg [7:0] D   [0:3]; // input data
-reg       CEN; // chip enable
+reg  [7:0] A;        // input address
+reg  [7:0] D [0:3];  // input data
+reg        CEN;      // chip enable
 // reg       WEN [0:3]; // write enable equal i_trig?
 
 // Sqrt Blocks
-reg sqrt_en_w, sqrt_en_r;
-reg [32:0] sqrt_a;
+reg         sqrt_en_w, sqrt_en_r;
+reg  [32:0] sqrt_a;
 wire [16:0] sqrt_result;
 
 // Multiply Blocks
@@ -95,16 +99,18 @@ wire [31:0] mul_c8;
 
 
 // Divide Blocks
-reg [15:0] div;
+reg  [15:0] div;
 wire [15:0] reciprocal;
 wire [3:0] div_shift;
 
 //usual store register
 reg [31:0] H_w [0:3][0:3], H_r [0:3][0:3];
 reg [31:0] temp_result_w [0:7], temp_result_r [0:7];
+
 reg [3:0] group_number_w, group_number_r;
 reg [2:0] col_w, col_r;
 reg [1:0] row_w, row_r;
+
 reg [33:0] temp;
 reg [33:0] temp2;
 reg [32:0] temp3;
@@ -115,7 +121,6 @@ reg [32:0] temp7;
 reg [32:0] temp8;
 reg [32:0] temp9;
 reg [32:0] temp10;
-
 reg [33:0] temp11;
 reg [33:0] temp12;
 
@@ -302,39 +307,58 @@ end
 // Logic
 always @(*) begin
     //data IO
-    for (i = 0; i < 4; i = i + 1) begin
-        y_hat_w[i] = y_hat_r[i];
-    end
+    y_hat_w[0] = y_hat_r[0];
+    y_hat_w[1] = y_hat_r[1];
+    y_hat_w[2] = y_hat_r[2];
+    y_hat_w[3] = y_hat_r[3];
+
     r_w = r_r;
-    rd_vld_w = 0;
+    rd_vld_w    = 0;
     last_data_w = 0;
+
     //sram write
-    row_w = row_r;
-    col_w = col_r;
+    row_w     = row_r;
+    col_w     = col_r;
     counter_w = counter_r;
+
     //process
-    first_proc_counter_w = first_proc_counter_r;
+    first_proc_counter_w  = first_proc_counter_r;
     second_proc_counter_w = second_proc_counter_r;
-    group_number_w = group_number_r;
-    mul_iter_w = mul_iter_r;
-    sqrt_iter_w = sqrt_iter_r;
+    group_number_w        = group_number_r;
+    mul_iter_w            = mul_iter_r;
+    sqrt_iter_w           = sqrt_iter_r;
+
     //div control
     div_counter_w = div_counter_r;
-    div = 0;
+    div           = 0;
+
     //sqrt control
     sqrt_counter_w = sqrt_counter_r;
-    sqrt_en_w = 0;
-    sqrt_a = 0;
+    sqrt_en_w      = 0;
+    sqrt_a         = 0;
+
     //sram read
     address_counter_w = address_counter_r;
     CEN = 1;
-    A= 0;    
-    for (i = 0; i < 4; i = i + 1) begin
-        D[i] = 0;
-        for(j = 0; j < 4; j = j + 1) begin
-            H_w[i][j] = H_r[i][j];
-        end
-    end
+
+    // H Matrix
+    H_w[0][0] = H_r[0][0];
+    H_w[0][1] = H_r[0][1];
+    H_w[0][2] = H_r[0][2];
+    H_w[0][3] = H_r[0][3];
+    H_w[1][0] = H_r[1][0];
+    H_w[1][1] = H_r[1][1];
+    H_w[1][2] = H_r[1][2];
+    H_w[1][3] = H_r[1][3];
+    H_w[2][0] = H_r[2][0];
+    H_w[2][1] = H_r[2][1];
+    H_w[2][2] = H_r[2][2];
+    H_w[2][3] = H_r[2][3];
+    H_w[3][0] = H_r[3][0];
+    H_w[3][1] = H_r[3][1];
+    H_w[3][2] = H_r[3][2];
+    H_w[3][3] = H_r[3][3];
+
     //mul
     mul_a1 = 0;
     mul_a2 = 0;
@@ -360,10 +384,16 @@ always @(*) begin
     mul_en6 = 0;
     mul_en7 = 0;
     mul_en8 = 0;
+
     //temp store data
-    for (i = 0; i < 8; i = i + 1) begin
-        temp_result_w[i] = temp_result_r[i];
-    end 
+    temp_result_w[0] = temp_result_r[0];
+    temp_result_w[1] = temp_result_r[1];
+    temp_result_w[2] = temp_result_r[2];
+    temp_result_w[3] = temp_result_r[3];
+    temp_result_w[4] = temp_result_r[4];
+    temp_result_w[5] = temp_result_r[5];
+    temp_result_w[6] = temp_result_r[6];
+    temp_result_w[7] = temp_result_r[7];
 
     case(state_r)
         S_READ: begin
@@ -411,9 +441,9 @@ always @(*) begin
             end
             // reset signal
             if (rd_vld_r == 1) begin
-                address_counter_w = 0;
+                address_counter_w    = 0;
                 first_proc_counter_w = 0;
-                group_number_w = group_number_r + 1;
+                group_number_w       = group_number_r + 1;
             end
             if (last_data_r) begin
                 group_number_w = 0;
@@ -2469,69 +2499,114 @@ end
 always @(posedge i_clk or posedge i_rst) begin
     if (i_rst) begin
         state_r <= S_READ;
-        for (i = 0; i < 4; i = i + 1) begin
-            y_hat_r[i] <= 0;
-        end
-        r_r     <= 0;
-        rd_vld_r <= 0;
-        last_data_r <= 0;
-        counter_r <= 0;
-        div_counter_r <= 0;
-        group_number_r <= 0;
-        mul_iter_r    <= 0;
-        sqrt_iter_r    <= 0;
-        col_r     <= 1;
-        row_r     <= 0;
-        first_proc_counter_r <= 0;
+
+        y_hat_r[0] <= 0;
+        y_hat_r[1] <= 0;
+        y_hat_r[2] <= 0;
+        y_hat_r[3] <= 0;
+
+        r_r                   <= 0;
+        rd_vld_r              <= 0;
+        last_data_r           <= 0;
+        counter_r             <= 0;
+        record_r              <= 0;
+        div_counter_r         <= 0;
+        group_number_r        <= 0;
+        mul_iter_r            <= 0;
+        sqrt_iter_r           <= 0;
+        col_r                 <= 1;
+        row_r                 <= 0;
+        first_proc_counter_r  <= 0;
         second_proc_counter_r <= 0;
-        address_counter_r <= 0;
-        sqrt_counter_r <= 0;
-        sqrt_en_r <= 0;
-        for (i = 0; i < 8; i = i + 1) begin
-            temp_result_r[i] <= 0;
-        end
-        for (i = 0; i < 4; i = i + 1) begin
-            for (j = 0; j < 4; j = j + 1) begin
-                H_r[i][j] <= 0;
-            end
-        end
+        address_counter_r     <= 0;
+        sqrt_counter_r        <= 0;
+        sqrt_en_r             <= 0;
+
+        temp_result_r[0] <= 0;
+        temp_result_r[1] <= 0;
+        temp_result_r[2] <= 0;
+        temp_result_r[3] <= 0;
+        temp_result_r[4] <= 0;
+        temp_result_r[5] <= 0;
+        temp_result_r[6] <= 0;
+        temp_result_r[7] <= 0;
+
+        H_w[0][0] = 0;
+        H_w[0][1] = 0;
+        H_w[0][2] = 0;
+        H_w[0][3] = 0;
+        H_w[1][0] = 0;
+        H_w[1][1] = 0;
+        H_w[1][2] = 0;
+        H_w[1][3] = 0;
+        H_w[2][0] = 0;
+        H_w[2][1] = 0;
+        H_w[2][2] = 0;
+        H_w[2][3] = 0;
+        H_w[3][0] = 0;
+        H_w[3][1] = 0;
+        H_w[3][2] = 0;
+        H_w[3][3] = 0;
     end
     else begin
         state_r <= state_w;
-        for (i = 0; i < 4; i = i + 1) begin
-            y_hat_r[i] <= y_hat_w[i];
-        end
-        r_r     <= r_w;
-        rd_vld_r <= rd_vld_w;
-        last_data_r <= last_data_w;
-        counter_r <= counter_w;
-        div_counter_r <= div_counter_w;
-        group_number_r <= group_number_w;
-        mul_iter_r    <= mul_iter_w;
-        sqrt_iter_r    <= sqrt_iter_w;
-        col_r    <= col_w;
-        row_r    <= row_w;
-        first_proc_counter_r <= first_proc_counter_w;
+
+        y_hat_r[0] <= y_hat_w[0];
+        y_hat_r[1] <= y_hat_w[1];
+        y_hat_r[2] <= y_hat_w[2];
+        y_hat_r[3] <= y_hat_w[3];
+
+        r_r                   <= r_w;
+        rd_vld_r              <= rd_vld_w;
+        last_data_r           <= last_data_w;
+        counter_r             <= counter_w;
+        record_r              <= record_w;
+        div_counter_r         <= div_counter_w;
+        group_number_r        <= group_number_w;
+        mul_iter_r            <= mul_iter_w;
+        sqrt_iter_r           <= sqrt_iter_w;
+        col_r                 <= col_w;
+        row_r                 <= row_w;
+        first_proc_counter_r  <= first_proc_counter_w;
+
         second_proc_counter_r <= second_proc_counter_w;
-        address_counter_r <= address_counter_w;
-        sqrt_counter_r <= sqrt_counter_w;
-        sqrt_en_r <= sqrt_en_w;
-        for (i = 0; i < 8; i = i + 1) begin
-            temp_result_r[i] <= temp_result_w[i];
-        end
-        for (i = 0; i < 4; i = i + 1) begin
-            for (j = 0; j < 4; j = j + 1) begin
-                H_r[i][j] <= H_w[i][j];
-            end
-        end
+        address_counter_r     <= address_counter_w;
+        sqrt_counter_r        <= sqrt_counter_w;
+        sqrt_en_r             <= sqrt_en_w;
+
+        temp_result_r[0] <= temp_result_w[0];
+        temp_result_r[1] <= temp_result_w[1];
+        temp_result_r[2] <= temp_result_w[2];
+        temp_result_r[3] <= temp_result_w[3];
+        temp_result_r[4] <= temp_result_w[4];
+        temp_result_r[5] <= temp_result_w[5];
+        temp_result_r[6] <= temp_result_w[6];
+        temp_result_r[7] <= temp_result_w[7];
+
+        H_w[0][0] = H_r[0][0];
+        H_w[0][1] = H_r[0][1];
+        H_w[0][2] = H_r[0][2];
+        H_w[0][3] = H_r[0][3];
+        H_w[1][0] = H_r[1][0];
+        H_w[1][1] = H_r[1][1];
+        H_w[1][2] = H_r[1][2];
+        H_w[1][3] = H_r[1][3];
+        H_w[2][0] = H_r[2][0];
+        H_w[2][1] = H_r[2][1];
+        H_w[2][2] = H_r[2][2];
+        H_w[2][3] = H_r[2][3];
+        H_w[3][0] = H_r[3][0];
+        H_w[3][1] = H_r[3][1];
+        H_w[3][2] = H_r[3][2];
+        H_w[3][3] = H_r[3][3];
     end
 end
 endmodule
 
-module Multiplier (
-    input  [15:0] A,
-    input  [15:0] B,
-    output [31:0] C
-);
-    assign C = $signed(A) * $signed(B);
-endmodule
+// module Multiplier (
+//     input  [15:0] A,
+//     input  [15:0] B,
+//     output [31:0] C
+// );
+//     assign C = $signed(A) * $signed(B);
+// endmodule
