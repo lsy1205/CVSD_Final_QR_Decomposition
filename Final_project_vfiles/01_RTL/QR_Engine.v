@@ -39,7 +39,6 @@ reg [319:0] r_w, r_r;
 // Control
 reg [1:0] state_r, state_w;
 reg [7:0] counter_r, counter_w;
-reg [3:0] record_r, record_w;
 
 reg [1:0] div_counter_r, div_counter_w;
 reg [2:0] sqrt_counter_r, sqrt_counter_w;
@@ -340,6 +339,12 @@ always @(*) begin
     //sram read
     address_counter_w = address_counter_r;
     CEN = 1;
+
+    A = 0;
+    D[0] = 0;
+    D[1] = 0;
+    D[2] = 0;
+    D[3] = 0;
 
     // H Matrix
     H_w[0][0] = H_r[0][0];
@@ -2509,7 +2514,6 @@ always @(posedge i_clk or posedge i_rst) begin
         rd_vld_r              <= 0;
         last_data_r           <= 0;
         counter_r             <= 0;
-        record_r              <= 0;
         div_counter_r         <= 0;
         group_number_r        <= 0;
         mul_iter_r            <= 0;
@@ -2560,7 +2564,6 @@ always @(posedge i_clk or posedge i_rst) begin
         rd_vld_r              <= rd_vld_w;
         last_data_r           <= last_data_w;
         counter_r             <= counter_w;
-        record_r              <= record_w;
         div_counter_r         <= div_counter_w;
         group_number_r        <= group_number_w;
         mul_iter_r            <= mul_iter_w;
