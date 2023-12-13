@@ -463,11 +463,11 @@ always @(*) begin
             // end Sram access
 
             // sqrt control
-            if (sqrt_counter_r != 0 && sqrt_counter_r != 5) begin
+            if (sqrt_counter_r != 0 && sqrt_counter_r != 4) begin
                 sqrt_en_w = 1;
                 sqrt_counter_w = sqrt_counter_r + 1;
             end
-            if (sqrt_counter_r == 5) begin
+            if (sqrt_counter_r == 4) begin
                 sqrt_counter_w = 0;
                 div_counter_w = 1;
             end

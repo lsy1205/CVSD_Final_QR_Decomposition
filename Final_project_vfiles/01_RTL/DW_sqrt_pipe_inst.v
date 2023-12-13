@@ -1,7 +1,7 @@
 module DW_sqrt_pipe_inst( inst_clk, inst_rst_n, inst_en, inst_a, root_inst );
     parameter inst_width = 33;
     parameter inst_tc_mode = 0;
-    parameter inst_num_stages = 6;
+    parameter inst_num_stages = 5;
     parameter inst_stall_mode = 1;
     parameter inst_rst_mode = 1;
     parameter inst_op_iso_mode = 0;
