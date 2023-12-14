@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+// `timescale 1ns/1ps
 `define CYCLE 5.0
 
 // NO_10RE 100 (function check)
