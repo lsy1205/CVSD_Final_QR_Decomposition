@@ -114,6 +114,7 @@ reg [ 2:0] col_r, col_w;
 reg [ 1:0] row_r, row_w;
 
 reg H_en[0:3][0:3];
+reg temp_result_en[0:7];
 reg group_number_en;
 reg col_en;
 reg row_en;
@@ -444,6 +445,15 @@ always @(*) begin
     temp_result_w[6] = temp_result_r[6];
     temp_result_w[7] = temp_result_r[7];
 
+    temp_result_en[0] = 0;
+    temp_result_en[1] = 0;
+    temp_result_en[2] = 0;
+    temp_result_en[3] = 0;
+    temp_result_en[4] = 0;
+    temp_result_en[5] = 0;
+    temp_result_en[6] = 0;
+    temp_result_en[7] = 0;
+
     case(state_r)
         S_READ: begin
             if (i_trig) begin
@@ -587,6 +597,8 @@ always @(*) begin
                     r_w[319:302] = {1'b0,sqrt_result};
                 end
                 div = sqrt_result[15:0];
+                temp_result_en[0] = 1;
+                temp_result_en[1] = 1;
                 temp_result_w[0] = reciprocal;
                 temp_result_w[1] = div_shift;
             end
@@ -654,14 +666,16 @@ always @(*) begin
                     mul_b2 = H_r[0][0][15:0];
                 end
                 4'd3: begin
-                    temp_result_w[0] = mul_c1[30:0] + mul_c2[30:0];
+                    temp_result_en[0] = 1;
+                    temp_result_w[0]  = mul_c1[30:0] + mul_c2[30:0];
                     mul_a1 = H_r[1][0][31:16];
                     mul_b1 = H_r[1][0][31:16];
                     mul_a2 = H_r[1][0][15:0];
                     mul_b2 = H_r[1][0][15:0];
                 end
                 4'd4: begin
-                    temp_result_w[1] = mul_c1[30:0] + mul_c2[30:0];
+                    temp_result_en[1] = 1;
+                    temp_result_w [1] = mul_c1[30:0] + mul_c2[30:0];
 
                     mul_a1 = H_r[2][0][31:16];
                     mul_b1 = H_r[2][0][31:16];
@@ -669,7 +683,8 @@ always @(*) begin
                     mul_b2 = H_r[2][0][15:0];
                 end
                 4'd5: begin
-                    temp_result_w[2] = mul_c1[30:0] + mul_c2[30:0];
+                    temp_result_en[2] = 1;
+                    temp_result_w [2] = mul_c1[30:0] + mul_c2[30:0];
 
                     mul_a1 = H_r[3][0][31:16];
                     mul_b1 = H_r[3][0][31:16];
@@ -677,10 +692,12 @@ always @(*) begin
                     mul_b2 = H_r[3][0][15:0];
                 end
                 4'd6: begin
-                    temp_result_w[3] = mul_c1[30:0] + mul_c2[30:0];
+                    temp_result_en[3] = 1;
+                    temp_result_w [3] = mul_c1[30:0] + mul_c2[30:0];
                 end
                 4'd7: begin
                     temp = (temp_result_r[0] + temp_result_r[1]) + (temp_result_r[2] + temp_result_r[3]);
+                    temp_result_en[6] = 1;
                     temp_result_w[6] = temp[31:0];
                     sqrt_en_w = 1;
                     sqrt_counter_en = 1;
@@ -739,6 +756,8 @@ always @(*) begin
 
                     end
                     4'd2: begin
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[1] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -782,6 +801,8 @@ always @(*) begin
                         mul_b8 = H_r[3][1][15:0];
                     end
                     4'd3: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[3] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
                         
@@ -833,6 +854,8 @@ always @(*) begin
                         r_w[59:40] = {temp2[33],temp2[30:12]}; // R12
                         r_w[39:20] = {temp[33],temp[30:12]};
 
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[1] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -876,6 +899,8 @@ always @(*) begin
                         mul_b8 = H_r[3][2][15:0];
                     end
                     4'd5: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[3] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -928,6 +953,8 @@ always @(*) begin
                         r_w[119:100] = {temp2[33],temp2[30:12]}; // R13
                         r_w[99:80] = {temp[33],temp[30:12]};
 
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[1] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -971,6 +998,8 @@ always @(*) begin
                         mul_b8 = H_r[3][3][15:0];
                     end
                     4'd7: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[3] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -1091,6 +1120,8 @@ always @(*) begin
                         mul_b4 = H_r[1][1][15:0];
                     end
                     4'd10: begin
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = mul_c1[30:0] + mul_c2[30:0];
                         temp_result_w[1] = mul_c3[30:0] + mul_c4[30:0];
                         
@@ -1104,6 +1135,8 @@ always @(*) begin
                         mul_b4 = H_r[3][1][15:0];
                     end
                     4'd11: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = mul_c1[30:0] + mul_c2[30:0];
                         temp_result_w[3] = mul_c3[30:0] + mul_c4[30:0];
 
@@ -1148,7 +1181,8 @@ always @(*) begin
                     end
                     4'd12: begin
                         temp = (temp_result_r[0] + temp_result_r[1]) + (temp_result_r[2] + temp_result_r[3]);
-                        temp_result_w[6] = temp[31:0];
+                        temp_result_en[6] = 1;
+                        temp_result_w [6] = temp[31:0];
                         sqrt_en_w = 1;
                         sqrt_counter_en = 1;
                         sqrt_counter_w  = 1;
@@ -1354,6 +1388,8 @@ always @(*) begin
 
                     end
                     4'd2: begin
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[1] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
                         // a = H_r[2][1][15:0]  b = H_r[2][1][31:16]  c = H_r[2][2][15:0]  d = H_r[2][2][31:16]
@@ -1396,6 +1432,8 @@ always @(*) begin
                         mul_b8 = H_r[3][2][15:0];
                     end
                     4'd3: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[3] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -1447,6 +1485,8 @@ always @(*) begin
                         r_w[159:140] = {temp2[33],temp2[30:12]}; // R23
                         r_w[139:120] = {temp[33],temp[30:12]};
                         
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[1] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -1490,6 +1530,8 @@ always @(*) begin
                         mul_b8 = H_r[3][3][15:0];
                     end
                     4'd5: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[3] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -1617,6 +1659,8 @@ always @(*) begin
                         mul_b4 = H_r[1][2][15:0];
                     end
                     4'd8: begin
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = mul_c1[30:0] + mul_c2[30:0];
                         temp_result_w[1] = mul_c3[30:0] + mul_c4[30:0];
                         
@@ -1630,6 +1674,8 @@ always @(*) begin
                         mul_b4 = H_r[3][2][15:0];
                     end
                     4'd9: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = mul_c1[30:0] + mul_c2[30:0];
                         temp_result_w[3] = mul_c3[30:0] + mul_c4[30:0];
 
@@ -1674,7 +1720,8 @@ always @(*) begin
                     end
                     4'd10: begin
                         temp = (temp_result_r[0] + temp_result_r[1]) + (temp_result_r[2] + temp_result_r[3]);
-                        temp_result_w[6] = temp[31:0];
+                        temp_result_en[6] = 1;
+                        temp_result_w [6] = temp[31:0];
                         sqrt_en_w = 1;
                         sqrt_counter_en = 1;
                         sqrt_counter_w  = 1;
@@ -1786,6 +1833,8 @@ always @(*) begin
 
                     end
                     4'd2: begin
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[1] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
 
@@ -1829,6 +1878,8 @@ always @(*) begin
                         mul_b8 = H_r[3][3][15:0];
                     end
                     4'd3: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = ($signed(mul_c1[30:0]) + $signed(mul_c2[30:0])) + ($signed(mul_c5[30:0]) + $signed(mul_c6[30:0]));
                         temp_result_w[3] = ($signed(mul_c3[30:0]) - $signed(mul_c4[30:0])) + ($signed(mul_c7[30:0]) - $signed(mul_c8[30:0]));
                     end
@@ -1963,6 +2014,8 @@ always @(*) begin
                         mul_b4 = H_r[1][3][15:0];
                     end
                     4'd8: begin
+                        temp_result_en[0] = 1;
+                        temp_result_en[1] = 1;
                         temp_result_w[0] = mul_c1[30:0] + mul_c2[30:0];
                         temp_result_w[1] = mul_c3[30:0] + mul_c4[30:0];
 
@@ -1976,12 +2029,15 @@ always @(*) begin
                         mul_b4 = H_r[3][3][15:0];
                     end
                     4'd9: begin
+                        temp_result_en[2] = 1;
+                        temp_result_en[3] = 1;
                         temp_result_w[2] = mul_c1[30:0] + mul_c2[30:0];
                         temp_result_w[3] = mul_c3[30:0] + mul_c4[30:0];
                     end
                     4'd10: begin
                         temp = (temp_result_r[0] + temp_result_r[1]) + (temp_result_r[2] + temp_result_r[3]);
-                        temp_result_w[6] = temp[31:0];
+                        temp_result_en[6] = 1;
+                        temp_result_w [6] = temp[31:0];
                         sqrt_en_w = 1;
                         sqrt_counter_en = 1;
                         sqrt_counter_w  = 1;
@@ -2498,14 +2554,14 @@ always @(posedge i_clk or posedge i_rst) begin
         sqrt_counter_r        <= (   sqrt_counter_en) ?         sqrt_counter_w :        sqrt_counter_r;
         sqrt_en_r             <= sqrt_en_w;
         
-        temp_result_r[0] <= temp_result_w[0];
-        temp_result_r[1] <= temp_result_w[1];
-        temp_result_r[2] <= temp_result_w[2];
-        temp_result_r[3] <= temp_result_w[3];
-        temp_result_r[4] <= temp_result_w[4];
-        temp_result_r[5] <= temp_result_w[5];
-        temp_result_r[6] <= temp_result_w[6];
-        temp_result_r[7] <= temp_result_w[7];
+        temp_result_r[0] <= (temp_result_en[0]) ? temp_result_w[0] : temp_result_r[0];
+        temp_result_r[1] <= (temp_result_en[1]) ? temp_result_w[1] : temp_result_r[1];
+        temp_result_r[2] <= (temp_result_en[2]) ? temp_result_w[2] : temp_result_r[2];
+        temp_result_r[3] <= (temp_result_en[3]) ? temp_result_w[3] : temp_result_r[3];
+        temp_result_r[4] <= (temp_result_en[4]) ? temp_result_w[4] : temp_result_r[4];
+        temp_result_r[5] <= (temp_result_en[5]) ? temp_result_w[5] : temp_result_r[5];
+        temp_result_r[6] <= (temp_result_en[6]) ? temp_result_w[6] : temp_result_r[6];
+        temp_result_r[7] <= (temp_result_en[7]) ? temp_result_w[7] : temp_result_r[7];
 
         H_r[0][0] <= (H_en[0][0]) ? H_w[0][0] : H_r[0][0];
         H_r[0][1] <= (H_en[0][1]) ? H_w[0][1] : H_r[0][1];
