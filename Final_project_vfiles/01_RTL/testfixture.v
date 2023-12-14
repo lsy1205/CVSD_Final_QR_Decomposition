@@ -3,7 +3,7 @@
 
 // NO_10RE 100 (function check)
 // NO_10RE 1   (power analysis)
-`define NO_10RE 1 // 1 packet = 1000RE
+`define NO_10RE 100 // 1 packet = 1000RE
 
 module testfixture;
 
@@ -117,10 +117,10 @@ module testfixture;
     // ======== FSDB DUMP ======== //
     // =========================== //
 
-    initial begin
-        $fsdbDumpfile("testfixture.fsdb");
-        $fsdbDumpvars(0, testfixture, "+mda");
-    end
+    //initial begin
+    //    $fsdbDumpfile("testfixture.fsdb");
+    //    $fsdbDumpvars(0, testfixture, "+mda");
+    //end
 
     // ================================== //
     // ======== OTHER PARAMETERS ======== //
@@ -203,25 +203,23 @@ module testfixture;
 
             if ( ( (i+1) % 200 ) == 0 ) begin
 
-                flag = 1;
+                if ( ~o_last_data ) begin
 
-                @(posedge i_clk) #(1.0);
-                i_trig = 0;
+                    @(posedge i_clk) #(1.0);
+                    i_trig = 0;
+                    #(`CYCLE-2.0);
+                    
+                end
 
-                while ( flag ) begin
+                while ( ~o_last_data ) begin
 
-                    while ( ~o_last_data ) begin
-
-                        @(posedge i_clk) #(1.0);
-                        flag = 0;
-                
-                    end
-
+                    @(posedge i_clk) #(`CYCLE-1.0);
+            
                 end
             end
 
         end
-
+        
     end
 
     // =============================== //
