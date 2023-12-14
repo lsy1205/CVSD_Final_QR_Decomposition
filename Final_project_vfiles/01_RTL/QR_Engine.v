@@ -181,79 +181,79 @@ Div_LUT div0(
 );
 
 // Multiplier
-DW_mult_pipe_inst mul0(
+DW02_mult_2_stage_inst mul0(
     .inst_a(mul_a1),
     .inst_b(mul_b1),
     .inst_tc(1'b1),
     .inst_clk(i_clk),
-    .inst_en(mul_en1),
-    .inst_rst_n(~i_rst),
+    //.inst_en(mul_en1),
+    //.inst_rst_n(~i_rst),
     .product_inst(mul_c1)
 );
 
-DW_mult_pipe_inst mul1(
+DW02_mult_2_stage_inst mul1(
     .inst_a(mul_a2),
     .inst_b(mul_b2),
     .inst_tc(1'b1),
     .inst_clk(i_clk),
-    .inst_en(mul_en2),
-    .inst_rst_n(~i_rst),
+    //.inst_en(mul_en2),
+    //.inst_rst_n(~i_rst),
     .product_inst(mul_c2)
 );
-DW_mult_pipe_inst mul2(
+DW02_mult_2_stage_inst mul2(
     .inst_a(mul_a3),
     .inst_b(mul_b3),
     .inst_tc(1'b1),
     .inst_clk(i_clk),
-    .inst_en(mul_en3),
-    .inst_rst_n(~i_rst),
+    //.inst_en(mul_en3),
+    //.inst_rst_n(~i_rst),
     .product_inst(mul_c3)
 );
-DW_mult_pipe_inst mul3(
+DW02_mult_2_stage_inst mul3(
     .inst_a(mul_a4),
     .inst_b(mul_b4),
     .inst_tc(1'b1),
     .inst_clk(i_clk),
-    .inst_en(mul_en4),
-    .inst_rst_n(~i_rst),
+    //.inst_en(mul_en4),
+    //.inst_rst_n(~i_rst),
     .product_inst(mul_c4)
 );
-DW_mult_pipe_inst mul4(
+DW02_mult_2_stage_inst mul4(
     .inst_a(mul_a5),
     .inst_b(mul_b5),
     .inst_tc(1'b1),
     .inst_clk(i_clk),
-    .inst_en(mul_en5),
-    .inst_rst_n(~i_rst),
+    //.inst_en(mul_en5),
+    //.inst_rst_n(~i_rst),
     .product_inst(mul_c5)
 );
-DW_mult_pipe_inst mul5(
+DW02_mult_2_stage_inst mul5(
     .inst_a(mul_a6),
     .inst_b(mul_b6),
     .inst_tc(1'b1),
     .inst_clk(i_clk),
-    .inst_en(mul_en6),
-    .inst_rst_n(~i_rst),
+    //.inst_en(mul_en6),
+    //.inst_rst_n(~i_rst),
     .product_inst(mul_c6)
 );
 
-DW_mult_pipe_inst mul6(
+DW02_mult_2_stage_inst mul6(
     .inst_a(mul_a7),
     .inst_b(mul_b7),
     .inst_tc(1'b1),
     .inst_clk(i_clk),
-    .inst_en(mul_en7),
-    .inst_rst_n(~i_rst),
+    //.inst_en(mul_en7),
+    //.inst_rst_n(~i_rst),
     .product_inst(mul_c7)
 );
 
-DW_mult_pipe_inst mul8(
+DW02_mult_2_stage_inst mul8(
     .inst_a(mul_a8),
     .inst_b(mul_b8),
     .inst_tc(1'b1),
     .inst_clk(i_clk),
-    .inst_en(mul_en8),
-    .inst_rst_n(~i_rst),
+    //.inst_en(mul_en8),
+    //.inst_rst_n(~i_rst),
     .product_inst(mul_c8)
 );
 
