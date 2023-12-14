@@ -10,4 +10,5 @@
 // -----------------------------------------------------------------------------
 ../02_SYN/Netlist/QR_Engine_syn.v
 // SRAM.v
+./sram_256x8.v
 /home/raid7_2/course/cvsd/CBDK_IC_Contest/CIC/Verilog/tsmc13_neg.v
