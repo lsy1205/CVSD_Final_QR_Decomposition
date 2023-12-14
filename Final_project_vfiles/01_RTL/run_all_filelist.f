@@ -19,7 +19,7 @@
 ../01_RTL/DW_sqrt_pipe_inst.v
 ../01_RTL/Div_LUT.v
 ../01_RTL/DW_mult_pipe_inst.v
-../SRAM/sram_256x8/sram_256x8.v
+./sram_256x8.v
 
 // tb
-../00_TESTBED/testfixture.v
+./testfixture.v
