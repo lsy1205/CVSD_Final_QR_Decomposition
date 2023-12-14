@@ -114,6 +114,9 @@ reg [ 2:0] col_r, col_w;
 reg [ 1:0] row_r, row_w;
 
 reg H_en[0:3][0:3];
+reg group_number_en;
+reg col_en;
+reg row_en;
 
 reg [33:0] temp;
 reg [33:0] temp2;
@@ -342,6 +345,8 @@ always @(*) begin
     counter_w = counter_r;
 
     counter_en = 0;
+    col_en     = 0;
+    row_en     = 0;
 
     //process
     first_proc_counter_w  = first_proc_counter_r;
@@ -350,10 +355,11 @@ always @(*) begin
     mul_iter_w            = mul_iter_r;
     sqrt_iter_w           = sqrt_iter_r;
 
-    fp_counter_en = 0;
-    sp_counter_en = 0;
-    mul_iter_en   = 0;
-    sqrt_iter_en  = 0;
+    fp_counter_en   = 0;
+    sp_counter_en   = 0;
+    mul_iter_en     = 0;
+    sqrt_iter_en    = 0;
+    group_number_en = 0;
 
     //div control
     div_counter_w = div_counter_r;
@@ -442,8 +448,11 @@ always @(*) begin
         S_READ: begin
             if (i_trig) begin
                 if (col_r == 4) begin
-                    col_w = 0;
-                    row_w = row_r + 1;
+                    col_en = 1;
+                    col_w  = 0;
+
+                    row_en = 1;
+                    row_w  = row_r + 1;
 
                     counter_en = 1;
                     counter_w[7:6] = 2'b11;
@@ -451,11 +460,13 @@ always @(*) begin
                     counter_w[1:0] = row_r;
 
                     if (row_r == 3) begin
-                        group_number_w = group_number_r + 1;
+                        group_number_en = 1;
+                        group_number_w  = group_number_r + 1;
                     end
                 end
                 else begin
-                    col_w = col_r + 1;
+                    col_en = 1;
+                    col_w  = col_r + 1;
 
                     counter_en = 1;
                     counter_w[7:4] = group_number_r;
@@ -473,8 +484,10 @@ always @(*) begin
                 if (group_number_r == 10) begin
                     counter_en = 1;
                     counter_w = 0;
-                    col_w = 1;
-                    group_number_w = 0;
+                    col_en = 1;
+                    col_w  = 1;
+                    group_number_en = 1;
+                    group_number_w  = 0;
                 end
             end
         end
@@ -498,11 +511,13 @@ always @(*) begin
 
                 fp_counter_en        = 1;
                 first_proc_counter_w = 0;
+                group_number_en      = 1;
                 group_number_w = group_number_r + 1;
             end
             if (last_data_r) begin
                 last_data_en = 1;
-                group_number_w = 0;
+                group_number_en = 1;
+                group_number_w  = 0;
             end
             // end reset signal
 
@@ -2470,13 +2485,13 @@ always @(posedge i_clk or posedge i_rst) begin
         rd_vld_r              <= (   rd_vld_en) ?    rd_vld_w :    rd_vld_r;
         last_data_r           <= (last_data_en) ? last_data_w : last_data_r;
 
-        counter_r             <= (    counter_en) ?     counter_w :     counter_r;
-        div_counter_r         <= (div_counter_en) ? div_counter_w : div_counter_r;
-        group_number_r        <= group_number_w;
-        mul_iter_r            <= (   mul_iter_en) ?    mul_iter_w :   mul_iter_r;
-        sqrt_iter_r           <= (  sqrt_iter_en) ?   sqrt_iter_w :  sqrt_iter_r;
-        col_r                 <= col_w;
-        row_r                 <= row_w;
+        counter_r             <= (     counter_en) ?     counter_w  :      counter_r;
+        div_counter_r         <= ( div_counter_en) ? div_counter_w  :  div_counter_r;
+        group_number_r        <= (group_number_en) ? group_number_w : group_number_r;
+        mul_iter_r            <= (    mul_iter_en) ?     mul_iter_w :     mul_iter_r;
+        sqrt_iter_r           <= (   sqrt_iter_en) ?    sqrt_iter_w :    sqrt_iter_r;
+        col_r                 <= (         col_en) ?          col_w :          col_r;
+        row_r                 <= (         row_en) ?          row_w :          row_r;
         first_proc_counter_r  <= (     fp_counter_en) ?  first_proc_counter_w  :  first_proc_counter_r;
         second_proc_counter_r <= (     sp_counter_en) ? second_proc_counter_w  : second_proc_counter_r;
         address_counter_r     <= (address_counter_en) ?      address_counter_w :     address_counter_r;
