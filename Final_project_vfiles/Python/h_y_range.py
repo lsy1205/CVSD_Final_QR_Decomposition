@@ -1,21 +1,33 @@
 import math 
 import numpy as np
 
-R_file1 = open('../01_RTL/PATTERN/packet_1/output_R.dat', 'r')
-R_file2 = open('../01_RTL/PATTERN/packet_2/output_R.dat', 'r')
-R_file3 = open('../01_RTL/PATTERN/packet_3/output_R.dat', 'r')
-R_file4 = open('../01_RTL/PATTERN/packet_4/output_R.dat', 'r')
-R_file5 = open('../01_RTL/PATTERN/packet_5/output_R.dat', 'r')
-R_file6 = open('../01_RTL/PATTERN/packet_6/output_R.dat', 'r')
-R_file_list = [R_file1, R_file2, R_file3, R_file4, R_file5, R_file6]
-
 file1 = open('../01_RTL/PATTERN/packet_1/input_H_and_y.dat', 'r')
 file2 = open('../01_RTL/PATTERN/packet_2/input_H_and_y.dat', 'r')
 file3 = open('../01_RTL/PATTERN/packet_3/input_H_and_y.dat', 'r')
 file4 = open('../01_RTL/PATTERN/packet_4/input_H_and_y.dat', 'r')
 file5 = open('../01_RTL/PATTERN/packet_5/input_H_and_y.dat', 'r')
 file6 = open('../01_RTL/PATTERN/packet_6/input_H_and_y.dat', 'r')
-file_list = [file1, file2, file3, file4, file5, file6]
+file11 = open('../01_RTL/Extra_Pattern/SNR10/E1/input_H_and_y.dat' , 'r')
+file12 = open('../01_RTL/Extra_Pattern/SNR10/E2/input_H_and_y.dat' , 'r')
+file13 = open('../01_RTL/Extra_Pattern/SNR10/E3/input_H_and_y.dat' , 'r')
+file14 = open('../01_RTL/Extra_Pattern/SNR10/E4/input_H_and_y.dat' , 'r')
+file15 = open('../01_RTL/Extra_Pattern/SNR10/E5/input_H_and_y.dat' , 'r')
+file16 = open('../01_RTL/Extra_Pattern/SNR10/E6/input_H_and_y.dat' , 'r')
+file17 = open('../01_RTL/Extra_Pattern/SNR10/E7/input_H_and_y.dat' , 'r')
+file18 = open('../01_RTL/Extra_Pattern/SNR10/E8/input_H_and_y.dat' , 'r')
+file19 = open('../01_RTL/Extra_Pattern/SNR10/E9/input_H_and_y.dat' , 'r')
+file20 = open('../01_RTL/Extra_Pattern/SNR10/E10/input_H_and_y.dat', 'r')
+file21 = open('../01_RTL/Extra_Pattern/SNR15/E1/input_H_and_y.dat' , 'r')
+file22 = open('../01_RTL/Extra_Pattern/SNR15/E2/input_H_and_y.dat' , 'r')
+file23 = open('../01_RTL/Extra_Pattern/SNR15/E3/input_H_and_y.dat' , 'r')
+file24 = open('../01_RTL/Extra_Pattern/SNR15/E4/input_H_and_y.dat' , 'r')
+file25 = open('../01_RTL/Extra_Pattern/SNR15/E5/input_H_and_y.dat' , 'r')
+file26 = open('../01_RTL/Extra_Pattern/SNR15/E6/input_H_and_y.dat' , 'r')
+file27 = open('../01_RTL/Extra_Pattern/SNR15/E7/input_H_and_y.dat' , 'r')
+file28 = open('../01_RTL/Extra_Pattern/SNR15/E8/input_H_and_y.dat' , 'r')
+file29 = open('../01_RTL/Extra_Pattern/SNR15/E9/input_H_and_y.dat' , 'r')
+file30 = open('../01_RTL/Extra_Pattern/SNR15/E10/input_H_and_y.dat', 'r')
+file_list = [file25]
 
 
 outf = open('all_y.txt', 'w')
@@ -31,8 +43,8 @@ def signed_bin_to_dec(signed_binary_string):
         signed_integer = int(signed_binary_string, 2)
     return signed_integer
 
-YLIST = np.zeros(48000, int)
-HLIST = np.zeros(192000, int)
+YLIST = np.zeros(len(file_list)*8000, int)
+HLIST = np.zeros(len(file_list)*32000, int)
 f_num = 0
 i = 0
 

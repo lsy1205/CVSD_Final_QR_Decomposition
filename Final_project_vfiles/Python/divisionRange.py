@@ -1,13 +1,35 @@
 import math 
 import numpy as np
 
-file1 = open('../01_RTL/PATTERN/packet_1/output_R.dat', 'r')
-file2 = open('../01_RTL/PATTERN/packet_2/output_R.dat', 'r')
-file3 = open('../01_RTL/PATTERN/packet_3/output_R.dat', 'r')
-file4 = open('../01_RTL/PATTERN/packet_4/output_R.dat', 'r')
-file5 = open('../01_RTL/PATTERN/packet_5/output_R.dat', 'r')
-file6 = open('../01_RTL/PATTERN/packet_6/output_R.dat', 'r')
-file_list = [file1, file2, file3, file4, file5, file6]
+file1  = open('../01_RTL/PATTERN/packet_1/output_R.dat', 'r')
+file2  = open('../01_RTL/PATTERN/packet_2/output_R.dat', 'r')
+file3  = open('../01_RTL/PATTERN/packet_3/output_R.dat', 'r')
+file4  = open('../01_RTL/PATTERN/packet_4/output_R.dat', 'r')
+file5  = open('../01_RTL/PATTERN/packet_5/output_R.dat', 'r')
+file6  = open('../01_RTL/PATTERN/packet_6/output_R.dat', 'r')
+file11 = open('../01_RTL/Extra_Pattern/SNR10/E1/output_R.dat' , 'r')
+file12 = open('../01_RTL/Extra_Pattern/SNR10/E2/output_R.dat' , 'r')
+file13 = open('../01_RTL/Extra_Pattern/SNR10/E3/output_R.dat' , 'r')
+file14 = open('../01_RTL/Extra_Pattern/SNR10/E4/output_R.dat' , 'r')
+file15 = open('../01_RTL/Extra_Pattern/SNR10/E5/output_R.dat' , 'r')
+file16 = open('../01_RTL/Extra_Pattern/SNR10/E6/output_R.dat' , 'r')
+file17 = open('../01_RTL/Extra_Pattern/SNR10/E7/output_R.dat' , 'r')
+file18 = open('../01_RTL/Extra_Pattern/SNR10/E8/output_R.dat' , 'r')
+file19 = open('../01_RTL/Extra_Pattern/SNR10/E9/output_R.dat' , 'r')
+file20 = open('../01_RTL/Extra_Pattern/SNR10/E10/output_R.dat', 'r')
+file21 = open('../01_RTL/Extra_Pattern/SNR15/E1/output_R.dat' , 'r')
+file22 = open('../01_RTL/Extra_Pattern/SNR15/E2/output_R.dat' , 'r')
+file23 = open('../01_RTL/Extra_Pattern/SNR15/E3/output_R.dat' , 'r')
+file24 = open('../01_RTL/Extra_Pattern/SNR15/E4/output_R.dat' , 'r')
+file25 = open('../01_RTL/Extra_Pattern/SNR15/E5/output_R.dat' , 'r')
+file26 = open('../01_RTL/Extra_Pattern/SNR15/E6/output_R.dat' , 'r')
+file27 = open('../01_RTL/Extra_Pattern/SNR15/E7/output_R.dat' , 'r')
+file28 = open('../01_RTL/Extra_Pattern/SNR15/E8/output_R.dat' , 'r')
+file29 = open('../01_RTL/Extra_Pattern/SNR15/E9/output_R.dat' , 'r')
+file30 = open('../01_RTL/Extra_Pattern/SNR15/E10/output_R.dat', 'r')
+
+# modify this line to find the range of R in different files
+file_list = [file1, file2, file3, file4, file5, file6, file11, file12, file13, file14, file15, file16, file17, file18, file19, file20, file21, file22, file23, file24, file26, file27, file28, file29, file30]
 
 hfile1 = open('../01_RTL/PATTERN/packet_1/input_H_and_y.dat', 'r')
 hfile2 = open('../01_RTL/PATTERN/packet_2/input_H_and_y.dat', 'r')
@@ -28,7 +50,8 @@ def signed_bin_to_dec(signed_binary_string):
         signed_integer = int(signed_binary_string, 2)
     return signed_integer
 
-RLIST = np.zeros(24000)
+# print(len(file_list))
+RLIST = np.zeros(4000*len(file_list))
 f = 0
 i = 0
 
