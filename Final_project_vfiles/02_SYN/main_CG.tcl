@@ -38,7 +38,7 @@ check_timing > Report/check_timing.txt
 
 # Clock Gating
 set_clock_gating_style \
-    -max_fanout 8 \
+    -max_fanout 4 \
     -pos integrated \
     -control_point before \
     -control_signal scan_enable
