@@ -12,7 +12,7 @@
 +incdir+/usr/cad/synopsys/synthesis/cur/dw/sim_ver/+
 
 // Change different packets
-+define+P6
+// +define+P6
 
 // Add your RTL & SRAM files
 ../01_RTL/QR_Engine.v
