@@ -7,7 +7,7 @@ set compile_fix_multiple_port_nets "TRUE"
 
 set DESIGN "QR_Engine"
 set CLOCK "i_clk"
-set CLOCK_PERIOD 5.0
+set CLOCK_PERIOD 4.5
 
 sh rm -rf Netlist
 sh rm -rf Report
@@ -38,7 +38,7 @@ check_timing > Report/check_timing.txt
 
 # Clock Gating
 set_clock_gating_style \
-    -max_fanout 4 \
+    -max_fanout 8 \
     -pos integrated \
     -control_point before \
     -control_signal scan_enable
