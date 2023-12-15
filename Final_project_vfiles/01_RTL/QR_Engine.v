@@ -486,22 +486,22 @@ always @(*) begin
                 div_counter_w = 0;
                 second_proc_counter_w = 1;
 
-                temp[30:0] = mul_c1[30:0] << (temp_result_r[1]);
+                temp[30:0]                 = mul_c1[30:0] << (temp_result_r[1]);
                 H_w[0][sqrt_iter_r][31:16] = {mul_c1[31], temp[29:15]};
-                temp2[30:0] = mul_c2[30:0] << temp_result_r[1];
-                H_w[0][sqrt_iter_r][15:0] = {mul_c2[31], temp2[29:15]};
-                temp3[30:0] = mul_c3[30:0] << temp_result_r[1];
+                temp2[30:0]                = mul_c2[30:0] << temp_result_r[1];
+                H_w[0][sqrt_iter_r][15:0]  = {mul_c2[31], temp2[29:15]};
+                temp3[30:0]                = mul_c3[30:0] << temp_result_r[1];
                 H_w[1][sqrt_iter_r][31:16] = {mul_c3[31], temp3[29:15]};
-                temp4[30:0] = mul_c4[30:0] << temp_result_r[1];
-                H_w[1][sqrt_iter_r][15:0] = {mul_c4[31], temp4[29:15]};
-                temp5[30:0] = mul_c5[30:0] << temp_result_r[1];
+                temp4[30:0]                = mul_c4[30:0] << temp_result_r[1];
+                H_w[1][sqrt_iter_r][15:0]  = {mul_c4[31], temp4[29:15]};
+                temp5[30:0]                = mul_c5[30:0] << temp_result_r[1];
                 H_w[2][sqrt_iter_r][31:16] = {mul_c5[31], temp5[29:15]};
-                temp6[30:0] = mul_c6[30:0] << temp_result_r[1];
-                H_w[2][sqrt_iter_r][15:0] = {mul_c6[31], temp6[29:15]};
-                temp7[30:0] = mul_c7[30:0] << temp_result_r[1];
+                temp6[30:0]                = mul_c6[30:0] << temp_result_r[1];
+                H_w[2][sqrt_iter_r][15:0]  = {mul_c6[31], temp6[29:15]};
+                temp7[30:0]                = mul_c7[30:0] << temp_result_r[1];
                 H_w[3][sqrt_iter_r][31:16] = {mul_c7[31], temp7[29:15]};
-                temp8[30:0] = mul_c8[30:0] << temp_result_r[1];
-                H_w[3][sqrt_iter_r][15:0] = {mul_c8[31], temp8[29:15]};
+                temp8[30:0]                = mul_c8[30:0] << temp_result_r[1];
+                H_w[3][sqrt_iter_r][15:0]  = {mul_c8[31], temp8[29:15]};
 
                 sqrt_iter_w = sqrt_iter_r + 1;
             end
