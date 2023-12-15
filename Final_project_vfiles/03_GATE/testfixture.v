@@ -303,34 +303,34 @@ module testfixture;
             out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E10_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR10_E10_result.txt", "w");
         `elsif E11
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E1_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E1_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E1_result.txt", "w");
         `elsif E12
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E2_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E2_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E2_result.txt", "w");
         `elsif E13
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E3_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E3_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E3_result.txt", "w");
         `elsif E14
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E4_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E4_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E4_result.txt", "w");
         `elsif E15
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E5_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E5_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E5_result.txt", "w");
         `elsif E16
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E6_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E6_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E6_result.txt", "w");
         `elsif E17
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E7_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E7_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E7_result.txt", "w");
         `elsif E18
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E8_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E8_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E8_result.txt", "w");
         `elsif E19
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E9_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E9_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E9_result.txt", "w");
         `elsif E20
-            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E10_result.txt", "w");
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E10_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_E10_result.txt", "w");
         `else
             out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_P1_result.txt", "w");
