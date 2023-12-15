@@ -94,11 +94,11 @@ wire [15:0] reciprocal;
 wire [ 3:0] div_shift;
 
 //usual store register
-reg [31:0] H_w [0:3][0:3], H_r [0:3][0:3];
-reg [31:0] temp_result_w [0:7], temp_result_r [0:7];
-reg [ 3:0] group_number_w, group_number_r;
-reg [ 2:0] col_w, col_r;
-reg [ 1:0] row_w, row_r;
+reg [31:0] H_r [0:3][0:3], H_w [0:3][0:3];
+reg [31:0] temp_result_r[0:7], temp_result_w[0:7];
+reg [ 3:0] group_number_r, group_number_w;
+reg [ 2:0] col_r, col_w;
+reg [ 1:0] row_r, row_w;
 reg [33:0] temp;
 reg [33:0] temp2;
 reg [32:0] temp3;
@@ -487,21 +487,21 @@ always @(*) begin
                 second_proc_counter_w = 1;
 
                 temp[30:0]                 = mul_c1[30:0] << (temp_result_r[1]);
-                H_w[0][sqrt_iter_r][31:16] = {mul_c1[31], temp[29:15]};
-                temp2[30:0]                = mul_c2[30:0] << temp_result_r[1];
-                H_w[0][sqrt_iter_r][15:0]  = {mul_c2[31], temp2[29:15]};
-                temp3[30:0]                = mul_c3[30:0] << temp_result_r[1];
-                H_w[1][sqrt_iter_r][31:16] = {mul_c3[31], temp3[29:15]};
-                temp4[30:0]                = mul_c4[30:0] << temp_result_r[1];
-                H_w[1][sqrt_iter_r][15:0]  = {mul_c4[31], temp4[29:15]};
-                temp5[30:0]                = mul_c5[30:0] << temp_result_r[1];
-                H_w[2][sqrt_iter_r][31:16] = {mul_c5[31], temp5[29:15]};
-                temp6[30:0]                = mul_c6[30:0] << temp_result_r[1];
-                H_w[2][sqrt_iter_r][15:0]  = {mul_c6[31], temp6[29:15]};
-                temp7[30:0]                = mul_c7[30:0] << temp_result_r[1];
-                H_w[3][sqrt_iter_r][31:16] = {mul_c7[31], temp7[29:15]};
-                temp8[30:0]                = mul_c8[30:0] << temp_result_r[1];
-                H_w[3][sqrt_iter_r][15:0]  = {mul_c8[31], temp8[29:15]};
+                H_w[0][sqrt_iter_r][31:16] = {mul_c1[31], temp[30:16]};
+                temp2[30:0]                = mul_c2[30:0] << (temp_result_r[1]);
+                H_w[0][sqrt_iter_r][15:0]  = {mul_c2[31], temp2[30:16]};
+                temp3[30:0]                = mul_c3[30:0] << (temp_result_r[1]);
+                H_w[1][sqrt_iter_r][31:16] = {mul_c3[31], temp3[30:16]};
+                temp4[30:0]                = mul_c4[30:0] << (temp_result_r[1]);
+                H_w[1][sqrt_iter_r][15:0]  = {mul_c4[31], temp4[30:16]};
+                temp5[30:0]                = mul_c5[30:0] << (temp_result_r[1]);
+                H_w[2][sqrt_iter_r][31:16] = {mul_c5[31], temp5[30:16]};
+                temp6[30:0]                = mul_c6[30:0] << (temp_result_r[1]);
+                H_w[2][sqrt_iter_r][15:0]  = {mul_c6[31], temp6[30:16]};
+                temp7[30:0]                = mul_c7[30:0] << (temp_result_r[1]);
+                H_w[3][sqrt_iter_r][31:16] = {mul_c7[31], temp7[30:16]};
+                temp8[30:0]                = mul_c8[30:0] << (temp_result_r[1]);
+                H_w[3][sqrt_iter_r][15:0]  = {mul_c8[31], temp8[30:16]};
 
                 sqrt_iter_w = sqrt_iter_r + 1;
             end
@@ -1216,10 +1216,6 @@ always @(*) begin
                         mul_b8 = H_r[3][2][15:0];
                     end
                     4'd7: begin
-                        // temp = $signed(mul_c1) - $signed(mul_c2);
-                        // temp2 = $signed(mul_c3) + $signed(mul_c4);
-                        // temp11 = $signed(mul_c5) - $signed(mul_c6);
-                        // temp12 = $signed(mul_c7) + $signed(mul_c8);
                         H_w[2][3][15:0] = $signed(H_r[2][3][15:0]) - $signed({mul_c1[31], mul_c1[14+:15]}) + $signed({mul_c2[31], mul_c2[14+:15]});
                         H_w[2][3][31:16] = $signed(H_r[2][3][31:16]) - $signed({mul_c3[31], mul_c3[14+:15]}) - $signed({mul_c4[31], mul_c4[14+:15]});
                         H_w[3][3][15:0] = $signed(H_r[3][3][15:0]) - $signed({mul_c5[31], mul_c5[14+:15]}) + $signed({mul_c6[31], mul_c6[14+:15]});

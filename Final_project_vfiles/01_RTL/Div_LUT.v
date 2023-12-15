@@ -5,69 +5,88 @@ module Div_LUT (
 );
     reg  [15:0] reciprocal;
     reg  [ 3:0] shift;
-    wire [20:0] temp0;
+    wire [21:0] temp0;
     
     assign o_reciprocal = reciprocal;
     assign o_shift      = shift;
     
-    assign temp0 = {i_divisor[13:0], 7'b0000000};
+    assign temp0 = {i_divisor[14:0], 7'b0000000};
 
     always @(*) begin
         shift = 4'd0;
-        if (|i_divisor[14:8]) begin
-            if (|i_divisor[14:12]) begin
-                if (i_divisor[14]) begin
-                    shift = 4'd0;
-                end
-                else if (i_divisor[13]) begin
-                    shift = 4'd1;
+        if (|i_divisor[15:8]) begin
+            if (|i_divisor[15:12]) begin
+                if (|i_divisor[15:14]) begin
+                    if (i_divisor[15]) begin
+                        shift = 4'd0;
+                    end
+                    else begin
+                        shift = 4'd1;
+                    end
                 end
                 else begin
-                    shift = 4'd2;
+                    if (i_divisor[13]) begin
+                        shift = 4'd2;
+                    end
+                    else begin
+                        shift = 4'd3;
+                    end
                 end
-            end
-            else if (i_divisor[11]) begin
-                shift = 4'd3;
             end
             else begin
-                if (i_divisor[10]) begin
-                    shift = 4'd4;
-                end
-                else if (i_divisor[9]) begin
-                    shift = 4'd5;
+                if (|i_divisor[11:10]) begin
+                    if (i_divisor[11]) begin
+                        shift = 4'd4;
+                    end
+                    else begin
+                        shift = 4'd5;
+                    end
                 end
                 else begin
-                    shift = 4'd6;
+                    if (i_divisor[9]) begin
+                        shift = 4'd6;
+                    end
+                    else begin
+                        shift = 4'd7;
+                    end
                 end
             end
-        end
-        else if (i_divisor[7]) begin
-            shift = 4'd7;
         end
         else begin
-            if (|i_divisor[6:4]) begin
-                if (i_divisor[6]) begin
-                    shift = 4'd8;
-                end
-                else if (i_divisor[5]) begin
-                    shift = 4'd9;
+            if (|i_divisor[7:4]) begin
+                if (|i_divisor[7:6]) begin
+                    if (i_divisor[7]) begin
+                        shift = 4'd8;
+                    end
+                    else begin
+                        shift = 4'd9;
+                    end
                 end
                 else begin
-                    shift = 4'd10;
+                    if (i_divisor[5]) begin
+                        shift = 4'd10;
+                    end
+                    else begin
+                        shift = 4'd11;
+                    end
                 end
-            end
-            else if (i_divisor[3]) begin
-                shift = 4'd11;
             end
             else begin
-                if (i_divisor[2]) begin
-                    shift = 4'd12;
-                end
-                else if (i_divisor[1]) begin
-                    shift = 4'd13;
+                if (|i_divisor[3:2]) begin
+                    if (i_divisor[3]) begin
+                        shift = 4'd12;
+                    end
+                    else begin
+                        shift = 4'd13;
+                    end
                 end
                 else begin
-                    shift = 4'd14;
+                    if (i_divisor[1]) begin
+                        shift = 4'd14;
+                    end 
+                    else begin
+                        shift = 4'd15;
+                    end
                 end
             end
         end
@@ -75,7 +94,7 @@ module Div_LUT (
 
     always @(*) begin
         reciprocal = 16'b0000000000000000;
-        case (temp0[20-shift -: 7])
+        case (temp0[21-shift -: 7])
             7'b0000000: begin
                 reciprocal = 16'b0111111111111111;
             end
