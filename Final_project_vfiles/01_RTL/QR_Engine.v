@@ -287,6 +287,7 @@ integer i,j;
 // Finite State Machine
 always @(*) begin
     state_w = state_r;
+    state_en = 0;
     case(state_r)
         S_READ: begin
             if (group_number_r == 10) begin
