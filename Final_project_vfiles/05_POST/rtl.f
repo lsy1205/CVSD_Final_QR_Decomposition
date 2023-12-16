@@ -9,5 +9,6 @@
 // design files
 // -----------------------------------------------------------------------------
 ../04_APR/QR_Engine_pr.v
+../SRAM/sram_256x8/sram_256x8.v
 // SRAM.v
 /home/raid7_2/course/cvsd/CBDK_IC_Contest/CIC/Verilog/tsmc13_neg.v

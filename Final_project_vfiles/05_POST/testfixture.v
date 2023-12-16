@@ -83,6 +83,107 @@ module testfixture;
             $readmemh ("../01_RTL/PATTERN/packet_6/output_R.dat", PAT_out_R);
             $readmemh ("../01_RTL/PATTERN/packet_6/output_y_hat.dat", PAT_out_y_hat);
             $display  ("#----Pattern used in this testbench is packet_6 (SNR15dB)!----#");
+        // Extra Pattern
+        `elsif E1
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E1/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E1/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E1/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E1 (SNR10dB)!----#");
+        `elsif E2
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E2/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E2/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E2/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E2 (SNR10dB)!----#");
+        `elsif E3
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E3/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E3/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E3/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E3 (SNR10dB)!----#");
+        `elsif E4
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E4/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E4/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E4/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E4 (SNR10dB)!----#");
+        `elsif E5
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E5/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E5/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E5/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E5 (SNR10dB)!----#");
+        `elsif E6
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E6/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E6/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E6/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E6 (SNR10dB)!----#");
+        `elsif E7
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E7/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E7/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E7/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E7 (SNR10dB)!----#");
+        `elsif E8
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E8/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E8/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E8/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E8 (SNR10dB)!----#");
+        `elsif E9
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E9/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E9/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E9/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E9 (SNR10dB)!----#");
+        `elsif E10
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E10/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E10/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR10/E10/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E10 (SNR10dB)!----#");
+        `elsif E11
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E1/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E1/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E1/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E1 (SNR15dB)!----#");
+        `elsif E12
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E2/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E2/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E2/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E2 (SNR15dB)!----#");
+        `elsif E13
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E3/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E3/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E3/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E3 (SNR15dB)!----#");
+        `elsif E14
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E4/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E4/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E4/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E4 (SNR15dB)!----#");
+        `elsif E15
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E5/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E5/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E5/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E5 (SNR15dB)!----#");
+        `elsif E16
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E6/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E6/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E6/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E6 (SNR15dB)!----#");
+        `elsif E17
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E7/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E7/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E7/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E7 (SNR15dB)!----#");
+        `elsif E18
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E8/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E8/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E8/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E8 (SNR15dB)!----#");
+        `elsif E19
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E9/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E9/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E9/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E9 (SNR15dB)!----#");
+        `elsif E20
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E10/input_H_and_y.dat", PAT_in_H_and_y);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E10/output_R.dat", PAT_out_R);
+            $readmemh ("../01_RTL/Extra_Pattern/SNR15/E10/output_y_hat.dat", PAT_out_y_hat);
+            $display  ("#----Pattern used in this testbench is Extra Pattern E10 (SNR15dB)!----#");
         `else
             $readmemh ("../01_RTL/PATTERN/packet_1/input_H_and_y.dat", PAT_in_H_and_y);
             $readmemh ("../01_RTL/PATTERN/packet_1/output_R.dat", PAT_out_R);
@@ -118,8 +219,8 @@ module testfixture;
     // =========================== //
 
     initial begin
-        $fsdbDumpfile("testfixture.fsdb");
-        $fsdbDumpvars(0, testfixture, "+mda");
+       $fsdbDumpfile("testfixture.fsdb");
+       $fsdbDumpvars(0, testfixture, "+mda");
     end
 
     // ================================== //
@@ -171,6 +272,66 @@ module testfixture;
         `elsif P6
             out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_P6_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR15_P6_result.txt", "w");
+        `elsif E1
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E1_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E1_result.txt", "w");
+        `elsif E2
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E2_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E2_result.txt", "w");
+        `elsif E3
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E3_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E3_result.txt", "w");
+        `elsif E4
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E4_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E4_result.txt", "w");
+        `elsif E5
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E5_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E5_result.txt", "w");
+        `elsif E6
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E6_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E6_result.txt", "w");
+        `elsif E7
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E7_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E7_result.txt", "w");
+        `elsif E8
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E8_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E8_result.txt", "w");
+        `elsif E9
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E9_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E9_result.txt", "w");
+        `elsif E10
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_E10_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR10_E10_result.txt", "w");
+        `elsif E11
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E1_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E1_result.txt", "w");
+        `elsif E12
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E2_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E2_result.txt", "w");
+        `elsif E13
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E3_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E3_result.txt", "w");
+        `elsif E14
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E4_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E4_result.txt", "w");
+        `elsif E15
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E5_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E5_result.txt", "w");
+        `elsif E16
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E6_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E6_result.txt", "w");
+        `elsif E17
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E7_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E7_result.txt", "w");
+        `elsif E18
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E8_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E8_result.txt", "w");
+        `elsif E19
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E9_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E9_result.txt", "w");
+        `elsif E20
+            out_y_hat = $fopen("./RESULT/out_y_hat_SNR15_E10_result.txt", "w");
+            out_R = $fopen("./RESULT/out_R_SNR15_E10_result.txt", "w");
         `else
             out_y_hat = $fopen("./RESULT/out_y_hat_SNR10_P1_result.txt", "w");
             out_R = $fopen("./RESULT/out_R_SNR10_P1_result.txt", "w");
@@ -189,9 +350,11 @@ module testfixture;
 
         // start reset
         @(posedge i_clk) #(1.0);
+        $display("Start reset");
         i_rst = 1;
         repeat (3) @(posedge i_clk);
         @(posedge i_clk) #(1.0);
+        $display("End reset");
         i_rst = 0;
 
         // input signal
@@ -203,25 +366,23 @@ module testfixture;
 
             if ( ( (i+1) % 200 ) == 0 ) begin
 
-                flag = 1;
+                if ( ~o_last_data ) begin
 
-                @(posedge i_clk) #(1.0);
-                i_trig = 0;
+                    @(posedge i_clk) #(1.0);
+                    i_trig = 0;
+                    #(`CYCLE-2.0);
+                    
+                end
 
-                while ( flag ) begin
+                while ( ~o_last_data ) begin
 
-                    while ( ~o_last_data ) begin
-
-                        @(posedge i_clk) #(1.0);
-                        flag = 0;
-                
-                    end
-
+                    @(posedge i_clk) #(`CYCLE-1.0);
+            
                 end
             end
 
         end
-
+        
     end
 
     // =============================== //
