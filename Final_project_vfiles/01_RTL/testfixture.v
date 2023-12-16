@@ -3,7 +3,7 @@
 
 // NO_10RE 100 (function check)
 // NO_10RE 1   (power analysis)
-`define NO_10RE 1 // 1 packet = 1000RE
+`define NO_10RE 100 // 1 packet = 1000RE
 
 module testfixture;
 
