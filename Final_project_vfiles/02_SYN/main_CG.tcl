@@ -7,7 +7,7 @@ set compile_fix_multiple_port_nets "TRUE"
 
 set DESIGN "QR_Engine"
 set CLOCK "i_clk"
-set CLOCK_PERIOD 4.5
+set CLOCK_PERIOD 4.6
 
 sh rm -rf Netlist
 sh rm -rf Report
@@ -48,6 +48,8 @@ set_fix_multiple_port_nets -all -buffer_constants  [get_designs *]
 set_fix_hold [all_clocks]
 
 compile_ultra -gate_clock
+compile_ultra -inc
+compile_ultra -inc
 
 report_area > Report/$DESIGN\.area
 report_power > Report/$DESIGN\.power
