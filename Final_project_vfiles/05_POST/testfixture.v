@@ -3,7 +3,7 @@
 
 // NO_10RE 100 (function check)
 // NO_10RE 1   (power analysis)
-`define NO_10RE 1 // 1 packet = 1000RE
+`define NO_10RE 100 // 1 packet = 1000RE
 
 module testfixture;
 
@@ -366,6 +366,7 @@ module testfixture;
 
             if ( ( (i+1) % 200 ) == 0 ) begin
 
+                #(`CYCLE-2.0);
                 if ( ~o_last_data ) begin
 
                     @(posedge i_clk) #(1.0);

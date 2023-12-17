@@ -366,6 +366,7 @@ module testfixture;
 
             if ( ( (i+1) % 200 ) == 0 ) begin
 
+                #(`CYCLE-2.0);
                 if ( ~o_last_data ) begin
 
                     @(posedge i_clk) #(1.0);
