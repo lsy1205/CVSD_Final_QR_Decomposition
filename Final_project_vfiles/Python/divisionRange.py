@@ -29,8 +29,8 @@ file29 = open('../01_RTL/Extra_Pattern/SNR15/E9/output_R.dat' , 'r')
 file30 = open('../01_RTL/Extra_Pattern/SNR15/E10/output_R.dat', 'r')
 
 # modify this line to find the range of R in different files
-file_list = [file1, file2, file3, file4, file5, file6, file11, file12, file13, file14, file15, file16, file17, file18, file19, file20, file21, file22, file23, file24, file26, file27, file28, file29, file30]
-
+# file_list = [file1, file2, file3, file4, file5, file6, file11, file12, file13, file14, file15, file16, file17, file18, file19, file20, file21, file22, file23, file24, file26, file27, file28, file29, file30]
+file_list = [file25]
 hfile1 = open('../01_RTL/PATTERN/packet_1/input_H_and_y.dat', 'r')
 hfile2 = open('../01_RTL/PATTERN/packet_2/input_H_and_y.dat', 'r')
 hfile3 = open('../01_RTL/PATTERN/packet_3/input_H_and_y.dat', 'r')
@@ -87,6 +87,9 @@ print("std:     ", np.std(RLIST))
 
 for x in range(len(RLIST)):
     outf.write(str(RLIST[x]) + '\n')
+    if RLIST[x] > 2:
+        print(x)
+        # print(x, RLIST[x])
 
 # checking h files
 # print("=====================================")
